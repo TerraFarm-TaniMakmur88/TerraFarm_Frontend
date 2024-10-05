@@ -35,6 +35,10 @@ const Signup: React.FC = () => {
             navigate("/");
         }
     }, [isAuthenticated, navigate]);
+
+    const handleLanding = () => {
+        navigate("/landing");
+    };
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -76,7 +80,7 @@ const Signup: React.FC = () => {
     return (
         <main className="flex flex-row w-[100vw] min-h-screen justify-center items-center bg-gradient-to-tr from-primary-default/[0.4] to-white">
             <div className="flex flex-col w-full gap-3 px-10">
-                <img src={logo} alt="logo" className="absolute top-10 left-10 z-20 h-12" />
+                <img src={logo} alt="logo" onClick={handleLanding} className="absolute top-10 left-10 z-20 h-12 transition-transform duration-300 transform hover:scale-105" />
                 <p className="font-figtree text-5xl font-semibold">Join TerraFarm!</p>
                 <p className="font-figtree text-lg font-normal mb-4">Register to create your account</p>
                 <Form {...form}>

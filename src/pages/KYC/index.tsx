@@ -32,6 +32,10 @@ const KYC = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const navigate = useNavigate();
 
+    const handleLanding = () => {
+        navigate("/landing");
+    };
+
     // Validate field input
     const validateField = () => {
         const newErrors = { cropName: '', area: '', soilType: '', plantDate: '', location: '' };
@@ -120,7 +124,7 @@ const KYC = () => {
     return (
         <main className="flex flex-row w-[100vw] min-h-screen justify-center items-center bg-gradient-to-tr from-primary-default/[0.4] to-white">
             <div className="flex flex-col w-full gap-3 px-10 mt-32 mb-10">
-                <img src={logo} alt="logo" className="absolute top-10 left-10 z-20 h-12" />
+                <img src={logo} alt="logo" onClick={handleLanding} className="absolute top-10 left-10 z-20 h-12 transition-transform duration-300 transform hover:scale-105" />
                 <p className="font-figtree text-5xl font-semibold">Tell me about your field!</p>
                 <p className="font-figtree text-lg font-normal">Give us better information about your farm!</p>
 
