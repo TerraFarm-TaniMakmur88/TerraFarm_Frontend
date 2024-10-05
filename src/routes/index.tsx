@@ -1,5 +1,5 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
-import { Home, Login, Signup } from "@/pages";
+import { Home, KYC, Login, Signup } from "@/pages";
 import { Navbar } from "@/components";
 import Landing from "@/pages/landing";
 // import { AuthProvider } from "@/contexts/AuthContext";
@@ -41,6 +41,10 @@ const routes: RouteObject[] = [
             {
                 path: "/register",
                 element: <Signup />,
+            },
+            {
+                path: "/kyc",
+                element: <KYC />,
             },
             {
                 path: "/landing",
