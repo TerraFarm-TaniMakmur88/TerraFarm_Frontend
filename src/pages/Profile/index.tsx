@@ -129,8 +129,14 @@ function Profile() {
         try {
             await FieldApi.updateFieldStatus(id, status);
             setFields(fields.map(field => field.id === id ? { ...field, status } : field));
+            
+            if (status === "planting") {
+                const today = new Date().toISOString().split('T')[0];
+                await FieldApi.updatePlantDate(id, today);
+                setFields(fields.map(field => field.id === id ? { ...field, plantDate: today } : field));
+            }
         } catch (error) {
-            console.error('Error updating field status:', error);
+            console.error('Error updating field status or planting date:', error);
         }
     };
 
