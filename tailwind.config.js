@@ -110,7 +110,10 @@ module.exports = {
         '9/12': '75%',
         '10/12': '83.333333%',
         '11/12': '91.666667%',
-      }
+      },
+	  backgroundImage: {
+        'landing-custom-gradient': 'linear-gradient(180deg, #388E3C 49.53%, #FFFFFF 100%)',
+      },
   	},
 	fontFamily: {
 		'figtree': ['Figtree', 'sans-serif'],
