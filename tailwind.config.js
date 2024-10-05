@@ -57,7 +57,14 @@ module.exports = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			primary: {
+				default: '#388E3C',
+				darker: '#183F19',
+			},
+			secondary: {
+				default: '#E16C1A',
+			}
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -104,7 +111,10 @@ module.exports = {
         '10/12': '83.333333%',
         '11/12': '91.666667%',
       }
-  	}
+  	},
+	fontFamily: {
+		'figtree': ['Figtree', 'sans-serif'],
+	}
   },
   plugins: [require("tailwindcss-animate")],
 }
