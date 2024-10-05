@@ -24,6 +24,15 @@ class FieldApi{
             throw error;
         }
     }
+
+    static async updateFieldStatus(id: number, status: string): Promise<void> {
+        // eslint-disable-next-line no-useless-catch
+        try {
+            await this.axios.put(`/field/status`, { id, status });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default FieldApi;
