@@ -21,3 +21,21 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #292F3B;
 }
+
+@keyframes scrollUp {
+  0% {
+      transform: translateY(100%);
+      opacity: 0;
+  }
+  10%, 85% {
+      transform: translateY(0);
+      opacity: 1;
+  }
+  95%, 100% {
+      transform: translateY(-100%);
+      opacity: 0;
+  }
+}
+.animate-scroll-up {
+  animation: scrollUp 10s ease-in-out infinite;
+}

@@ -115,8 +115,9 @@ module.exports = {
 	  backgroundImage: {
         'landing-custom-gradient': 'linear-gradient(180deg, #388E3C 49.53%, #FFFFFF 100%)',
 		'bg-custom-gradient': 'linear-gradient(180deg, #63A266 0%, #FFF 41.25%)',
-		'weather-custom-gradient': 'linear-gradient(90deg, #58C0D0 0%, #B6E5EC 100%)',
-		'rain-custom-gradient': 'linear-gradient(0deg, #0F505A 0%, #B9EFF7 100%);',
+		'weather-custom-gradient': 'linear-gradient(90deg, #859E86 0%, #E9F0E9 100%)',
+		'rain-custom-gradient': 'linear-gradient(0deg, #795548 0%, #a5bba5 100%)',
+		'action-custom-gradient': 'linear-gradient(0deg, #473128 0%, #a3887f 100%)',
       },
   	},
 	fontFamily: {
