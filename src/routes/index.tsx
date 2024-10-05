@@ -4,6 +4,7 @@ import { Navbar } from "@/components";
 import Landing from "@/pages/landing";
 import Profile from "@/pages/Profile";
 import { AuthProvider } from "@/contexts/AuthContext";
+import ResourceManagement from "@/pages/ResourceManagement";
 
 const MainLayout = () => {
     return (
@@ -38,6 +39,10 @@ const routes: RouteObject[] = [
             {
                 path: "/profile",
                 element: <Profile />,
+            },
+            {
+                path: "/resource",
+                element: <ResourceManagement />,
             }
         ],
     },

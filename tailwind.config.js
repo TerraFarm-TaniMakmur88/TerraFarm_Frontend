@@ -118,6 +118,7 @@ module.exports = {
 		'weather-custom-gradient': 'linear-gradient(90deg, #859E86 0%, #E9F0E9 100%)',
 		'rain-custom-gradient': 'linear-gradient(0deg, #795548 0%, #a5bba5 100%)',
 		'action-custom-gradient': 'linear-gradient(0deg, #473128 0%, #a3887f 100%)',
+		'resource-custom-gradient': 'linear-gradient(0deg, #473128 0%, #388E3C 100%)',
       },
   	},
 	fontFamily: {
