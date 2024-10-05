@@ -23,7 +23,7 @@ class UserApi {
     static async getSelf(token: string): Promise<SelfResponse> {
         // eslint-disable-next-line no-useless-catch
         try {
-            const response = await this.axios.post<SelfResponse>("/user", {
+            const response = await this.axios.get<SelfResponse>("/user", {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },

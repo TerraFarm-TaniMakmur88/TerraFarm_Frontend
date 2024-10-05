@@ -46,7 +46,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         setToken(token);
                     }
                 } catch (error) {
-                    Cookies.remove("tf-token");
                     console.error(error);
                 }
             }
