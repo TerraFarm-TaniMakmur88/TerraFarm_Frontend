@@ -18,6 +18,11 @@ function Profile() {
     });
 
     const [fields, setFields] = useState<CropResponse[]>([]);
+    const handleLogout = () => {
+        // Basically calling logout
+        logout();
+        window.location.href = "/landing";
+    };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -56,7 +61,7 @@ function Profile() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="absolute right-0 w-fit bg-white px-5 py-2 rounded-lg ring-0 focus:ring-0 drop-shadow-md">
-                        <DropdownMenuLabel onClick={logout}>Logout</DropdownMenuLabel>
+                        <DropdownMenuLabel onClick={handleLogout}>Logout</DropdownMenuLabel>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
