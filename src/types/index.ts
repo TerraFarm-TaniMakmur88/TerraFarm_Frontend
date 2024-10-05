@@ -17,3 +17,10 @@ export interface LoginRequest {
 export interface LoginResponse {
     token: string;
 }
+
+// Signup Request
+export interface SignupRequest {
+    name: string;
+    email: string;
+    password: string;
+}
