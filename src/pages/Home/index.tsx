@@ -10,6 +10,7 @@ import { ArrowRightCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/contexts/AuthContext";
 import { getUsernameFromToken } from "@/utils/jwt-util";
+import { toast } from "react-toastify";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
@@ -20,53 +21,53 @@ const Home: React.FC = () => {
     };
 
     // Dummy weather data
-    const weatherData = [
-        {
-            temperature: 25,
-            date: "05/10/2024",
-            location: "Bandung",
-            rainfall: 1.88,
-            wind: 1.3,
-            humidity: 50.4,
-            image: cloudy
-        },
-        {
-            temperature: 29,
-            date: "06/10/2024",
-            location: "Jakarta",
-            rainfall: 2.4,
-            wind: 1.5,
-            humidity: 60.3,
-            image: rainfall
-        },
-        {
-            temperature: 22,
-            date: "07/10/2024",
-            location: "Surabaya",
-            rainfall: 0.5,
-            wind: 2.0,
-            humidity: 45.8,
-            image: wind
-        },
-        {
-            temperature: 25,
-            date: "05/10/2024",
-            location: "Bandung",
-            rainfall: 1.88,
-            wind: 1.3,
-            humidity: 50.4,
-            image: cloudy
-        },
-        {
-            temperature: 29,
-            date: "06/10/2024",
-            location: "Jakarta",
-            rainfall: 2.4,
-            wind: 1.5,
-            humidity: 60.3,
-            image: rainfall
-        }
-    ];
+    // const weatherData = [
+    //     {
+    //         temperature: 25,
+    //         date: "05/10/2024",
+    //         location: "Bandung",
+    //         rainfall: 1.88,
+    //         wind: 1.3,
+    //         humidity: 50.4,
+    //         image: cloudy
+    //     },
+    //     {
+    //         temperature: 29,
+    //         date: "06/10/2024",
+    //         location: "Jakarta",
+    //         rainfall: 2.4,
+    //         wind: 1.5,
+    //         humidity: 60.3,
+    //         image: rainfall
+    //     },
+    //     {
+    //         temperature: 22,
+    //         date: "07/10/2024",
+    //         location: "Surabaya",
+    //         rainfall: 0.5,
+    //         wind: 2.0,
+    //         humidity: 45.8,
+    //         image: wind
+    //     },
+    //     {
+    //         temperature: 25,
+    //         date: "05/10/2024",
+    //         location: "Bandung",
+    //         rainfall: 1.88,
+    //         wind: 1.3,
+    //         humidity: 50.4,
+    //         image: cloudy
+    //     },
+    //     {
+    //         temperature: 29,
+    //         date: "06/10/2024",
+    //         location: "Jakarta",
+    //         rainfall: 2.4,
+    //         wind: 1.5,
+    //         humidity: 60.3,
+    //         image: rainfall
+    //     }
+    // ];
 
     // Dummy action recommendations
     const actionRecommendations = [
@@ -74,10 +75,46 @@ const Home: React.FC = () => {
         'Start replanting your rice fields today!',
         'Plant your empty field with rice in 7 days!'
     ];
-
+    
     const [weatherIndex, setWeatherIndex] = useState(0);
     const [recommendationIndex, setRecommendationIndex] = useState(0);
     const username = getUsernameFromToken(token as string);
+    
+    // get location
+    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+    const [weatherData, setWeatherData] = useState<unknown[]>([]);
+
+    useEffect(() => {
+        const handleGetLocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        setLocation({ latitude, longitude });
+                        fetchWeatherData(latitude, longitude);
+                    },
+                    (error) => {
+                        console.error("Error retrieving location:", error);
+                        toast.error("Unable to retrieve location. Please check your location settings.");
+                    }
+                );
+            } else {
+                toast.error("Geolocation is not supported by this browser.");
+            }
+        };
+        handleGetLocation();
+    }, [])
+
+    // Fetch weather data using lat and long
+    const fetchWeatherData = async (latitude: number, longitude: number) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/weather/dashboard?coordX=${latitude}&coordY=${longitude}`);
+            const data = await response.json();
+            setWeatherData(data);
+        } catch (error) {
+            console.error("Error fetching weather data:", error);
+        }
+    };
 
     // Carousel effect for weather data
     useEffect(() => {
@@ -103,6 +140,7 @@ const Home: React.FC = () => {
         }
     }, [isAuthenticated, navigate]);
 
+
     return (
         <div className="w-screen h-screen bg-white flex flex-col px-7 py-8 items-center">
             <div className="flex flex-row w-full mb-7 justify-end">
@@ -110,33 +148,48 @@ const Home: React.FC = () => {
             </div>
             <p className="w-full mb-4 items-start font-figtree font-bold text-3xl text-black">Hello, {username}!</p>
 
+            {location ? (
+                <p>
+                    Latitude: {location.latitude}, Longitude: {location.longitude}
+                </p>
+            ) : (
+                <p>Loading location...</p>
+            )}
+
             {/* Weather Data Carousel */}
             <div className="flex flex-col items-center w-full mb-5">
                 <div className="flex flex-row w-full px-5 py-4 mb-3 gap-3 bg-weather-custom-gradient rounded-lg drop-shadow-md items-center">
-                    <img src={weatherData[weatherIndex].image} className="w-24 h-20 p-2 drop-shadow-md" />
-                    <p className="mr-2 font-figtree font-bold text-5xl text-black">{weatherData[weatherIndex].temperature}°</p>
+                    {/* <img src={weatherData[weatherIndex].image} className="w-24 h-20 p-2 drop-shadow-md" /> */}
+                    <img src={cloudy} className="w-24 h-20 p-2 drop-shadow-md" />
+                    {/* <p className="mr-2 font-figtree font-bold text-5xl text-black">{weatherData[weatherIndex].temperature}°</p> */}
+                    <p className="mr-2 font-figtree font-bold text-5xl text-black">25°</p>
                     <div className="flex flex-col items-start">
-                        <p className="font-figtree font-medium text-sm text-black">{weatherData[weatherIndex].date}</p>
-                        <p className="font-figtree font-semibold text-2xl text-black">{weatherData[weatherIndex].location}</p>
+                        {/* <p className="font-figtree font-medium text-sm text-black">{weatherData[weatherIndex].date}</p> */}
+                        <p className="font-figtree font-medium text-sm text-black">06/10/2024</p>
+                        {/* <p className="font-figtree font-semibold text-2xl text-black">{weatherData[weatherIndex].location}</p> */}
+                        <p className="font-figtree font-semibold text-2xl text-black">Jakarta</p>
                     </div>
                 </div>
                 <div className="flex flex-row gap-1.5 w-full mb-3">
                     <div className="flex-1 flex flex-col items-center px-4 pt-4 pb-5 gap-0 bg-rain-custom-gradient rounded-lg drop-shadow-sm items-center">
                         <img src={rainfall} className="h-6 mb-0.5" />
                         <p className="mb-3 font-figtree font-bold text-sm text-gray-100">Rainfall</p>
-                        <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].rainfall}</p>
+                        {/* <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].rainfall}</p> */}
+                        <p className="font-figtree font-medium text-4xl text-white">1.33</p>
                         <p className="font-figtree font-medium text-sm text-white text-center">mm / day</p>
                     </div>
                     <div className="flex-1 flex flex-col items-center px-4 pt-4 pb-5 gap-0 bg-rain-custom-gradient rounded-lg drop-shadow-sm items-center">
                         <img src={wind} className="h-4 mb-2.5" />
                         <p className="mb-3 font-figtree font-bold text-sm text-gray-100">Wind</p>
-                        <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].wind}</p>
+                        {/* <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].wind}</p> */}
+                        <p className="font-figtree font-medium text-4xl text-white">2.3</p>
                         <p className="font-figtree font-medium text-sm text-white text-center">m / s</p>
                     </div>
                     <div className="flex-1 flex flex-col items-center px-4 pt-4 pb-5 gap-0 bg-rain-custom-gradient rounded-lg drop-shadow-sm items-center">
                         <img src={humidity} className="h-6 mb-0.5" />
                         <p className="mb-3 font-figtree font-bold text-sm text-gray-100">Humidity</p>
-                        <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].humidity}</p>
+                        {/* <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].humidity}</p> */}
+                        <p className="font-figtree font-medium text-4xl text-white">45.8</p>
                         <p className="font-figtree font-medium text-sm text-white text-center">percent</p>
                     </div>
                 </div>
