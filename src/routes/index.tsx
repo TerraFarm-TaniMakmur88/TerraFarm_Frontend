@@ -29,12 +29,12 @@ const routes: RouteObject[] = [
         ],
     },
     {
-        path: "/",
+        path: "/auth",
         element: <AuthLayout />,
         children: [
             {
                 path: "/auth",
-                element: <Home />
+                element: <Home />,  // Change this to the correct auth-related component
             }
         ],
     },
