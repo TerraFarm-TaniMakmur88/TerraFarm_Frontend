@@ -2,6 +2,7 @@ import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
 import { Home, Login } from "@/pages";
 import { Navbar } from "@/components";
 import Landing from "@/pages/landing";
+import Profile from "@/pages/Profile";
 // import { AuthProvider } from "@/contexts/AuthContext";
 
 const MainLayout = () => {
@@ -27,6 +28,10 @@ const routes: RouteObject[] = [
             {
                 path: "/",
                 element: <Home />,
+            },
+            {
+                path: "/profile",
+                element: <Profile />,
             }
         ],
     },
