@@ -11,78 +11,40 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "@/contexts/AuthContext";
 import { getUsernameFromToken } from "@/utils/jwt-util";
 import { toast } from "react-toastify";
+import { UserApi } from "@/api";
+import { WeatherData, WeatherResponse } from "@/types";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const { token, isAuthenticated } = useAuth();
-    
+    const username = getUsernameFromToken(token as string);
+
+    const [_, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+    const [actionRecommendations, setActionRecommendations] = useState<string[]>([]);
+    const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
+    const [weatherIndex, setWeatherIndex] = useState(0);
+    const [recommendationIndex, setRecommendationIndex] = useState(0);
+    const [loading, setLoading] = useState(true); // Add loading state
+
+    const [weatherInterval, setWeatherInterval] = useState<NodeJS.Timeout | null>(null);
+    const [recommendationInterval, setRecommendationInterval] = useState<NodeJS.Timeout | null>(null);
+
+    // Function to fetch weather data
+    const fetchWeatherData = async (latitude: number, longitude: number) => {
+        try {
+            const weatherFetchData: WeatherResponse = await UserApi.weatherData(latitude, longitude);
+            setWeatherData(weatherFetchData.listData);
+            setActionRecommendations(weatherFetchData.insights);
+            setLoading(false); // Data is fetched, set loading to false
+        } catch (error) {
+            console.error("Error fetching weather data:", error);
+            toast.error("Failed to fetch weather data. Please try again later.");
+        }
+    };
+
     const handleNavigateResource = () => {
         navigate('/resource');
     };
-
-    // Dummy weather data
-    // const weatherData = [
-    //     {
-    //         temperature: 25,
-    //         date: "05/10/2024",
-    //         location: "Bandung",
-    //         rainfall: 1.88,
-    //         wind: 1.3,
-    //         humidity: 50.4,
-    //         image: cloudy
-    //     },
-    //     {
-    //         temperature: 29,
-    //         date: "06/10/2024",
-    //         location: "Jakarta",
-    //         rainfall: 2.4,
-    //         wind: 1.5,
-    //         humidity: 60.3,
-    //         image: rainfall
-    //     },
-    //     {
-    //         temperature: 22,
-    //         date: "07/10/2024",
-    //         location: "Surabaya",
-    //         rainfall: 0.5,
-    //         wind: 2.0,
-    //         humidity: 45.8,
-    //         image: wind
-    //     },
-    //     {
-    //         temperature: 25,
-    //         date: "05/10/2024",
-    //         location: "Bandung",
-    //         rainfall: 1.88,
-    //         wind: 1.3,
-    //         humidity: 50.4,
-    //         image: cloudy
-    //     },
-    //     {
-    //         temperature: 29,
-    //         date: "06/10/2024",
-    //         location: "Jakarta",
-    //         rainfall: 2.4,
-    //         wind: 1.5,
-    //         humidity: 60.3,
-    //         image: rainfall
-    //     }
-    // ];
-
-    // Dummy action recommendations
-    const actionRecommendations = [
-        'Harvest your cassavas before raining in 5 days!',
-        'Start replanting your rice fields today!',
-        'Plant your empty field with rice in 7 days!'
-    ];
-    
-    const [weatherIndex, setWeatherIndex] = useState(0);
-    const [recommendationIndex, setRecommendationIndex] = useState(0);
-    const username = getUsernameFromToken(token as string);
-    
-    // get location
-    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-    const [weatherData, setWeatherData] = useState<unknown[]>([]);
 
     useEffect(() => {
         const handleGetLocation = () => {
@@ -91,7 +53,7 @@ const Home: React.FC = () => {
                     (position) => {
                         const { latitude, longitude } = position.coords;
                         setLocation({ latitude, longitude });
-                        fetchWeatherData(latitude, longitude);
+                        fetchWeatherData(latitude, longitude); // Fetch the weather data
                     },
                     (error) => {
                         console.error("Error retrieving location:", error);
@@ -103,43 +65,52 @@ const Home: React.FC = () => {
             }
         };
         handleGetLocation();
-    }, [])
+    }, []);
 
-    // Fetch weather data using lat and long
-    const fetchWeatherData = async (latitude: number, longitude: number) => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/weather/dashboard?coordX=${latitude}&coordY=${longitude}`);
-            const data = await response.json();
-            setWeatherData(data);
-        } catch (error) {
-            console.error("Error fetching weather data:", error);
+    // Set up carousel intervals after data is fully loaded
+    useEffect(() => {
+        if (!loading && weatherData.length > 0 && actionRecommendations.length > 0) {
+            // Start weather data carousel
+            if (weatherInterval) clearInterval(weatherInterval); // Reset interval
+            const weatherIntervalId = setInterval(() => {
+                setWeatherIndex((prevIndex) => (prevIndex + 1) % weatherData.length);
+            }, 10000); // Rotate every 10 seconds
+            setWeatherInterval(weatherIntervalId);
+
+            // Start recommendations carousel
+            if (recommendationInterval) clearInterval(recommendationInterval); // Reset interval
+            const recommendationIntervalId = setInterval(() => {
+                setRecommendationIndex((prevIndex) => (prevIndex + 1) % actionRecommendations.length);
+            }, 10000); // Rotate every 10 seconds
+            setRecommendationInterval(recommendationIntervalId);
         }
-    };
 
-    // Carousel effect for weather data
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setWeatherIndex((prevIndex) => (prevIndex + 1) % weatherData.length);
-        }, 10000); // Rotate every 10 seconds
-        return () => clearInterval(interval);
-    }, []);
-
-    // Carousel effect for action recommendations
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setRecommendationIndex((prevIndex) => (prevIndex + 1) % actionRecommendations.length);
-        }, 10000);
-        return () => clearInterval(interval);
-    }, []);
+        // Cleanup intervals on component unmount
+        return () => {
+            if (weatherInterval) clearInterval(weatherInterval);
+            if (recommendationInterval) clearInterval(recommendationInterval);
+        };
+    }, [loading, weatherData, actionRecommendations]);
 
     // Redirect to login if unauthenticated
     useEffect(() => {
         if (!isAuthenticated) {
-            console.log("User is unauthenticated, navigating to login");
             navigate("/login");
         }
     }, [isAuthenticated, navigate]);
 
+    // Helper function to format the date
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    };
+
+    if (loading) {
+        return <div>Loading...</div>; // Show a loading state until the data is fetched
+    }
 
     return (
         <div className="w-screen h-screen bg-white flex flex-col px-7 py-8 items-center">
@@ -148,48 +119,35 @@ const Home: React.FC = () => {
             </div>
             <p className="w-full mb-4 items-start font-figtree font-bold text-3xl text-black">Hello, {username}!</p>
 
-            {location ? (
-                <p>
-                    Latitude: {location.latitude}, Longitude: {location.longitude}
-                </p>
-            ) : (
-                <p>Loading location...</p>
-            )}
-
             {/* Weather Data Carousel */}
             <div className="flex flex-col items-center w-full mb-5">
-                <div className="flex flex-row w-full px-5 py-4 mb-3 gap-3 bg-weather-custom-gradient rounded-lg drop-shadow-md items-center">
-                    {/* <img src={weatherData[weatherIndex].image} className="w-24 h-20 p-2 drop-shadow-md" /> */}
-                    <img src={cloudy} className="w-24 h-20 p-2 drop-shadow-md" />
-                    {/* <p className="mr-2 font-figtree font-bold text-5xl text-black">{weatherData[weatherIndex].temperature}°</p> */}
-                    <p className="mr-2 font-figtree font-bold text-5xl text-black">25°</p>
-                    <div className="flex flex-col items-start">
-                        {/* <p className="font-figtree font-medium text-sm text-black">{weatherData[weatherIndex].date}</p> */}
-                        <p className="font-figtree font-medium text-sm text-black">06/10/2024</p>
-                        {/* <p className="font-figtree font-semibold text-2xl text-black">{weatherData[weatherIndex].location}</p> */}
-                        <p className="font-figtree font-semibold text-2xl text-black">Jakarta</p>
+                {weatherData.length > 0 && (
+                    <div className="flex flex-row w-full px-5 py-4 mb-3 gap-3 bg-weather-custom-gradient rounded-lg drop-shadow-md items-center">
+                        <img src={cloudy} className="w-24 h-20 p-2 drop-shadow-md" />
+                        <p className="mr-2 font-figtree font-bold text-5xl text-black">{Math.round(weatherData[weatherIndex].temperature)}°</p>
+                        <div className="flex flex-col items-start">
+                            <p className="font-figtree font-medium text-sm text-black">{formatDate(weatherData[weatherIndex].date)}</p>
+                            <p className="font-figtree font-semibold text-2xl text-black">{weatherData[weatherIndex].location}</p>
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="flex flex-row gap-1.5 w-full mb-3">
                     <div className="flex-1 flex flex-col items-center px-4 pt-4 pb-5 gap-0 bg-rain-custom-gradient rounded-lg drop-shadow-sm items-center">
                         <img src={rainfall} className="h-6 mb-0.5" />
                         <p className="mb-3 font-figtree font-bold text-sm text-gray-100">Rainfall</p>
-                        {/* <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].rainfall}</p> */}
-                        <p className="font-figtree font-medium text-4xl text-white">1.33</p>
+                        <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex]?.rainfall}</p>
                         <p className="font-figtree font-medium text-sm text-white text-center">mm / day</p>
                     </div>
                     <div className="flex-1 flex flex-col items-center px-4 pt-4 pb-5 gap-0 bg-rain-custom-gradient rounded-lg drop-shadow-sm items-center">
                         <img src={wind} className="h-4 mb-2.5" />
                         <p className="mb-3 font-figtree font-bold text-sm text-gray-100">Wind</p>
-                        {/* <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].wind}</p> */}
-                        <p className="font-figtree font-medium text-4xl text-white">2.3</p>
+                        <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex]?.wind}</p>
                         <p className="font-figtree font-medium text-sm text-white text-center">m / s</p>
                     </div>
                     <div className="flex-1 flex flex-col items-center px-4 pt-4 pb-5 gap-0 bg-rain-custom-gradient rounded-lg drop-shadow-sm items-center">
                         <img src={humidity} className="h-6 mb-0.5" />
                         <p className="mb-3 font-figtree font-bold text-sm text-gray-100">Humidity</p>
-                        {/* <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex].humidity}</p> */}
-                        <p className="font-figtree font-medium text-4xl text-white">45.8</p>
+                        <p className="font-figtree font-medium text-4xl text-white">{weatherData[weatherIndex]?.humidity}</p>
                         <p className="font-figtree font-medium text-sm text-white text-center">percent</p>
                     </div>
                 </div>

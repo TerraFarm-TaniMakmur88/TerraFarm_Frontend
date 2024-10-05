@@ -69,3 +69,19 @@ export interface KYCResponse {
     location: string;
     fields: CropData[];
 }
+
+// Weather Response
+export interface WeatherResponse {
+    insights: string[];
+    listData: WeatherData[];
+}
+
+// Weather Data
+export interface WeatherData {
+    date: string;
+    humidity: number;
+    location: string;
+    rainfall: number;
+    temperature: number;
+    wind: number;
+}

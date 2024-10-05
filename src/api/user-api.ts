@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SelfResponse } from "@/types";
+import { SelfResponse, WeatherResponse } from "@/types";
 import { API_URL } from "@/constant";
 import Cookies from "js-cookie";
 
@@ -17,6 +17,16 @@ class UserApi {
         // eslint-disable-next-line no-useless-catch
         try {
             const response = await this.axios.get<SelfResponse>("/user");
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async weatherData(latitude: number, longitude: number): Promise<WeatherResponse> {
+        // eslint-disable-next-line no-useless-catch
+        try {
+            const response = await this.axios.get<WeatherResponse>(`/weather/dashboard?coordX=${latitude}&coordY=${longitude}`);
             return response.data;
         } catch (error) {
             throw error;
