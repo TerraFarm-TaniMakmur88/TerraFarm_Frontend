@@ -47,3 +47,26 @@ export interface CropResponse {
     status: string;
     harvest_pred: string | null;
 }
+
+// KYC Request
+export interface KYCRequest {
+    userId: number;
+    location: string;
+    fields: CropData[];
+}
+
+// CropData
+interface CropData {
+    cropName: string;
+    area: number;
+    soilType: string;
+    status: string;
+    plantDate: string;
+}
+
+// KYC Response
+export interface KYCResponse {
+    userId: number;
+    location: string;
+    fields: CropData[];
+}
