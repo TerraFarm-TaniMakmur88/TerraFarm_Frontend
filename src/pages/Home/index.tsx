@@ -9,10 +9,11 @@ import resourceBg from '@/assets/images/resource_bg.png'
 import { ArrowRightCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/contexts/AuthContext";
+import { getUsernameFromToken } from "@/utils/jwt-util";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
-    const { isAuthenticated } = useAuth();
+    const { token, isAuthenticated } = useAuth();
     
     const handleNavigateResource = () => {
         navigate('/resource');
@@ -32,6 +33,7 @@ const Home: React.FC = () => {
     ];
 
     const [index, setIndex] = useState(0);
+    const username = getUsernameFromToken(token as string);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -45,7 +47,7 @@ const Home: React.FC = () => {
             <div className="flex flex-row w-full mb-7 justify-end">
                 <img src={logoSquare} className="h-10" />
             </div>
-            <p className="w-full mb-4 items-start font-figtree font-bold text-3xl text-black">Hello, Farmer Name!</p>
+            <p className="w-full mb-4 items-start font-figtree font-bold text-3xl text-black">Hello, {username}!</p>
             <div className="flex flex-row w-full px-5 py-4 mb-3 gap-3 bg-weather-custom-gradient rounded-lg drop-shadow-md items-center">
                 <img src={cloudy} className="w-20 drop-shadow-md" />
                 <p className="mr-2 font-figtree font-medium text-5xl text-black">25°</p>
