@@ -64,10 +64,10 @@ function ResourceManagement() {
             <p className="font-figtree font-bold text-3xl text-black">Resource management tool</p>
             <p className="mt-6 mb-3 font-figtree font-semibold text-xl text-black">Best crops to plant on your field</p>
             <Carousel className="w-full">
-                <CarouselContent className="h-13 p-1 flex gap-0">
+                <CarouselContent className="h-16 p-1 flex gap-0">
                     {idealCrops.map((crop, index) => (
                         <CarouselItem key={index} className="basis-2/5 flex-shrink-0 w-40 drop-shadow-xs">
-                            <div className="w-full flex flex-row items-center gap-2 py-2 px-3 drop-shadow-lg bg-[#F2F7F2] rounded-lg">
+                            <div className="w-full flex flex-row items-center gap-2 py-3 px-3 drop-shadow-lg bg-[#F2F7F2] rounded-lg">
                                 <img src={cropIcon} className="h-6" alt="Crop Icon" />
                                 <p className="font-figtree font-semibold text-black text-base">
                                     {crop}
@@ -77,7 +77,7 @@ function ResourceManagement() {
                     ))}
                 </CarouselContent>
             </Carousel>
-            <div className="flex flex-row w-full mt-3 gap-2 items-center">
+            <div className="flex flex-row w-full mt-1 gap-2 items-center">
                 <InfoIcon className="text-gray-400" style={{ height: '16px', }} />
                 <p className="grow font-figtree font-normal text-gray-400 text-xs">
                     Recommendation is generated from your field's condition and environment
@@ -127,7 +127,7 @@ function ResourceManagement() {
                     </div>
                 ))}
             </div>
-            <div className="flex flex-row w-full mt-3 gap-2 items-center">
+            <div className="flex flex-row w-full mt-2 gap-2 items-center">
                 <InfoIcon className="text-gray-400" style={{ height: '16px', }} />
                 <p className="grow font-figtree font-normal text-gray-400 text-xs">
                     Prediction is calculated based on the water, weather, and soil condition
@@ -136,7 +136,7 @@ function ResourceManagement() {
 
             
             <p className="mt-7 mb-3 font-figtree font-semibold text-xl text-black">Crop profit calculator</p>
-            <div className="w-full flex flex-col items-start gap-4 bg-[#F2F7F2] py-5 px-5 rounded-lg drop-shadow-md">
+            <div className="w-full flex flex-col items-start gap-3 bg-[#F2F7F2] py-5 px-5 rounded-lg drop-shadow-md">
                 {/* Total Revenue Input */}
                 <label className="font-figtree text-base text-black">Total Revenue:</label>
                 <input
@@ -160,14 +160,14 @@ function ResourceManagement() {
                 {/* Calculate Button */}
                 <button
                     onClick={calculateProfit}
-                    className="mt-4 p-2 bg-primary-default text-white font-semibold rounded-lg"
+                    className="mt-2 p-2 bg-primary-default text-white font-semibold rounded-lg"
                 >
                     Calculate Profit
                 </button>
                 
                 {/* Results */}
                 {profit !== null && profitMargin !== null && (
-                    <div className="mt-4">
+                    <div className="mt-2">
                         <p className="font-figtree font-semibold text-base text-black">
                             Operating Profit: ${profit.toFixed(2)}
                         </p>
@@ -177,7 +177,7 @@ function ResourceManagement() {
                     </div>
                 )}
             </div>
-            <div className="flex flex-row w-full mt-4 gap-2 items-center">
+            <div className="flex flex-row w-full mt-3 gap-2 items-center">
                 <InfoIcon className="text-gray-400" style={{ height: '16px', }} />
                 <p className="grow font-figtree font-normal text-gray-400 text-xs">
                     Calculation formula from <a href='https://aglearninghub.com/operating-profit-margin-in-farm-financials/'><i><u>Operating Profit Margin in Farm Financials.</u></i> (2024, March 17). Ag Learning Hub. </a>
