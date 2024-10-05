@@ -59,7 +59,7 @@ const routes: RouteObject[] = [
                 element: <Signup />,
             },
             {
-                path: "/kyc",
+                path: "/kyc/:id",
                 element: <KYC />,
             },
             {

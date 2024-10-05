@@ -5,40 +5,42 @@ import { Input } from "@/components/ui/input";
 import logo from "@/assets/logos/logo_square_default.svg";
 import { Loader2 } from 'lucide-react';
 import useAuth from '@/contexts/AuthContext';
+import { useParams } from 'react-router-dom';
 
 interface Field {
-  cropType: string;
+  cropName: string;
   area: number;
   soilType: string;
-  plantingDate: string;
+  plantDate: string;
 }
 
 const KYC = () => {
+    const { id } = useParams<{ id: string }>();
     const { update, setUpdate } = useAuth();
     const [fields, setFields] = useState<Field[]>([]);
     const [newField, setNewField] = useState<Field>({
-        cropType: '',
+        cropName: '',
         area: 0,
         soilType: '',
-        plantingDate: ''
+        plantDate: ''
     });
     const [location, setLocation] = useState('');
     const [errors, setErrors] = useState({
-        cropType: '',
+        cropName: '',
         area: '',
         soilType: '',
-        plantingDate: '',
+        plantDate: '',
         location: ''
     });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Validate field input
     const validateField = () => {
-        const newErrors = { cropType: '', area: '', soilType: '', plantingDate: '', location: '' };
+        const newErrors = { cropName: '', area: '', soilType: '', plantDate: '', location: '' };
         let isValid = true;
 
-        if (!newField.cropType.trim()) {
-            newErrors.cropType = "Crop type is required.";
+        if (!newField.cropName.trim()) {
+            newErrors.cropName = "Crop type is required.";
             isValid = false;
         }
 
@@ -53,8 +55,8 @@ const KYC = () => {
         }
 
         const today = new Date().toISOString().split('T')[0];
-        if (!newField.plantingDate || newField.plantingDate < today) {
-            newErrors.plantingDate = "Planting date must be today or later.";
+        if (!newField.plantDate || newField.plantDate < today) {
+            newErrors.plantDate = "Planting date must be today or later.";
             isValid = false;
         }
 
@@ -71,8 +73,8 @@ const KYC = () => {
     const handleAddField = () => {
         if (validateField()) {
             setFields([...fields, newField]);
-            setNewField({ cropType: '', area: 0, soilType: '', plantingDate: '' });
-            setErrors({ cropType: '', area: '', soilType: '', plantingDate: '', location: '' });  // Clear errors after adding
+            setNewField({ cropName: '', area: 0, soilType: '', plantDate: '' });
+            setErrors({ cropName: '', area: '', soilType: '', plantDate: '', location: '' });  // Clear errors after adding
             setIsDialogOpen(false);
         }
     };
@@ -92,16 +94,17 @@ const KYC = () => {
             alert("You must add at least one field.");
             return;
         }
-
+    
         const data = {
+            userId: Number(id), // Convert the id string to a number
             location,
             fields
         };
-
+    
         // Simulate API call by logging the data to console
         console.log("Prepared Data for API:", data);
         setUpdate(true);  // To disable the button while processing
-    };
+    };    
 
     return (
         <main className="flex flex-row w-[100vw] min-h-screen justify-center items-center bg-gradient-to-tr from-primary-default/[0.4] to-white">
@@ -124,17 +127,17 @@ const KYC = () => {
 
                 {/* List of fields */}
                 <div className="mb-4 space-y-2">
-                    <label className="block text-sm font-medium">Your Fields</label>
+                    <p className="block text-sm font-medium">Your Fields</p>
                     {fields.length === 0 ? (
                         <p className="text-gray-500">No fields registered</p>
                     ) : (
-                        <div className="grid grid-cols-1 gap-4 h-72 overflow-y-auto">
+                        <div className="grid grid-cols-1 gap-4 max-h-72 overflow-y-auto">
                             {fields.map((field, index) => (
                                 <div key={index} className="border rounded-xl p-4 bg-white shadow-md">
-                                    <h4 className="font-semibold text-lg">{field.cropType}</h4>
+                                    <h4 className="font-semibold text-lg">{field.cropName}</h4>
                                     <p>Area: {field.area} ha</p>
                                     <p>Soil Type: {field.soilType}</p>
-                                    <p>Planting Date: {new Date(field.plantingDate).toLocaleDateString()}</p>
+                                    <p>Planting Date: {new Date(field.plantDate).toLocaleDateString()}</p>
                                 </div>
                             ))}
                         </div>
@@ -156,11 +159,11 @@ const KYC = () => {
                                     <div className='text-sm font-semibold'>Crop Type</div>
                                     <Input
                                         placeholder="Enter crop type..."
-                                        value={newField.cropType}
-                                        onChange={(e) => handleInputChange(e, 'cropType')}
-                                        className={`w-full rounded-xl h-12 ${errors.cropType ? 'border-red-500' : ''}`}
+                                        value={newField.cropName}
+                                        onChange={(e) => handleInputChange(e, 'cropName')}
+                                        className={`w-full rounded-xl h-12 ${errors.cropName ? 'border-red-500' : ''}`}
                                     />
-                                    {errors.cropType && <p className="text-red-500 text-sm">{errors.cropType}</p>}
+                                    {errors.cropName && <p className="text-red-500 text-sm">{errors.cropName}</p>}
                                 </div>
                                 <div className='space-y-1.5'>
                                     <div className='text-sm font-semibold'>Area</div>
@@ -187,12 +190,12 @@ const KYC = () => {
                                     <div className='text-sm font-semibold'>Planting date</div>
                                     <Input
                                         placeholder="Enter planting date"
-                                        value={newField.plantingDate}
-                                        onChange={(e) => handleInputChange(e, 'plantingDate')}
-                                        className={`w-full rounded-xl h-12 ${errors.plantingDate ? 'border-red-500' : ''}`}
+                                        value={newField.plantDate}
+                                        onChange={(e) => handleInputChange(e, 'plantDate')}
+                                        className={`w-full rounded-xl h-12 ${errors.plantDate ? 'border-red-500' : ''}`}
                                         type="date"
                                     />
-                                    {errors.plantingDate && <p className="text-red-500 text-sm">{errors.plantingDate}</p>}
+                                    {errors.plantDate && <p className="text-red-500 text-sm">{errors.plantDate}</p>}
                                 </div>
                                 <Button className="w-full py-2 mt-8 text-lg bg-primary-default text-white rounded-full hover:bg-primary-dark transition-transform duration-300 transform hover:scale-105" onClick={handleAddField}>
                                     Save
