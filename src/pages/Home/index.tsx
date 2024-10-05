@@ -8,13 +8,22 @@ import plantingIcon from '@/assets/images/planting.png'
 import resourceBg from '@/assets/images/resource_bg.png'
 import { ArrowRightCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "@/contexts/AuthContext";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
     
     const handleNavigateResource = () => {
         navigate('/resource');
     };
+    
+    useEffect(() => {
+        if (!isAuthenticated) {
+            console.log("User is unauthenticated, navigating to login");
+            navigate("/login");
+        }
+    }, [isAuthenticated, navigate]);
     
     const actionRecommendations = [
         'Harvest your cassavas before raining in 5 days!',
