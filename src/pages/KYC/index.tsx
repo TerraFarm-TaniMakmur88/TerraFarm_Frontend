@@ -22,17 +22,19 @@ const KYC = () => {
         soilType: '',
         plantingDate: ''
     });
+    const [location, setLocation] = useState('');
     const [errors, setErrors] = useState({
         cropType: '',
         area: '',
         soilType: '',
-        plantingDate: ''
+        plantingDate: '',
+        location: ''
     });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Validate field input
     const validateField = () => {
-        const newErrors = { cropType: '', area: '', soilType: '', plantingDate: '' };
+        const newErrors = { cropType: '', area: '', soilType: '', plantingDate: '', location: '' };
         let isValid = true;
 
         if (!newField.cropType.trim()) {
@@ -56,6 +58,11 @@ const KYC = () => {
             isValid = false;
         }
 
+        if (!location.trim() && !isDialogOpen) {
+            newErrors.location = "Location is required.";
+            isValid = false;
+        }
+
         setErrors(newErrors);
         return isValid;
     };
@@ -65,12 +72,12 @@ const KYC = () => {
         if (validateField()) {
             setFields([...fields, newField]);
             setNewField({ cropType: '', area: 0, soilType: '', plantingDate: '' });
-            setErrors({ cropType: '', area: '', soilType: '', plantingDate: '' });  // Clear errors after adding
+            setErrors({ cropType: '', area: '', soilType: '', plantingDate: '', location: '' });  // Clear errors after adding
             setIsDialogOpen(false);
         }
     };
 
-    // Input change handler
+    // Input change handler for field data
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof Field) => {
         const value = field === 'area' ? Number(e.target.value) : e.target.value;
         setNewField({
@@ -87,18 +94,18 @@ const KYC = () => {
         }
 
         const data = {
-            location: newField.area,  // Assuming location corresponds to area
+            location,
             fields
         };
 
-        // You can handle the API call here
+        // Simulate API call by logging the data to console
         console.log("Prepared Data for API:", data);
         setUpdate(true);  // To disable the button while processing
     };
 
     return (
         <main className="flex flex-row w-[100vw] min-h-screen justify-center items-center bg-gradient-to-tr from-primary-default/[0.4] to-white">
-            <div className="flex flex-col w-full gap-3 px-10">
+            <div className="flex flex-col w-full gap-3 px-10 mt-32 mb-10">
                 <img src={logo} alt="logo" className="absolute top-10 left-10 z-20 h-12" />
                 <p className="font-figtree text-5xl font-semibold">Tell me about your field!</p>
                 <p className="font-figtree text-lg font-normal">Give us better information about your farm!</p>
@@ -107,13 +114,12 @@ const KYC = () => {
                 <div className='space-y-2'>
                     <div className='text-sm font-semibold'>Location</div>
                     <Input
-                        placeholder="Enter area in ha"
-                        value={newField.area || ''}
-                        onChange={(e) => handleInputChange(e, 'area')}
-                        className={`w-full rounded-xl h-12 ${errors.area ? 'border-red-500' : ''}`}
-                        type="number"
+                        placeholder="Enter location"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className={`w-full rounded-xl h-12 ${errors.location ? 'border-red-500' : ''}`}
                     />
-                    {errors.area && <p className="text-red-500 text-sm">{errors.area}</p>}
+                    {errors.location && <p className="text-red-500 text-sm">{errors.location}</p>}
                 </div>
 
                 {/* List of fields */}
@@ -122,7 +128,7 @@ const KYC = () => {
                     {fields.length === 0 ? (
                         <p className="text-gray-500">No fields registered</p>
                     ) : (
-                        <div className="grid grid-cols-1 gap-4">
+                        <div className="grid grid-cols-1 gap-4 h-72 overflow-y-auto">
                             {fields.map((field, index) => (
                                 <div key={index} className="border rounded-xl p-4 bg-white shadow-md">
                                     <h4 className="font-semibold text-lg">{field.cropType}</h4>
@@ -198,14 +204,8 @@ const KYC = () => {
 
                 {/* Complete Setup Button */}
                 <div className="mt-6">
-                    <Button type="submit" className="w-full py-2 mt-8 text-lg bg-primary-default text-white rounded-full hover:bg-color-primary-default transition-transform duration-300 transform hover:scale-105" onClick={handleSubmit} disabled={update}>
-                        {update ? (
-                            <>
-                                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Please Wait...
-                            </>
-                        ) : (
-                            "Complete Setup"
-                        )}
+                    <Button type="submit" className="w-full py-3 text-lg bg-primary-default text-white rounded-full hover:bg-primary-dark transition-transform duration-300 transform hover:scale-105" onClick={handleSubmit}>
+                        Complete Setup {update && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
                     </Button>
                 </div>
             </div>
