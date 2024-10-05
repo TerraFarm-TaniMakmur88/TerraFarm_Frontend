@@ -4,8 +4,8 @@ import { API_URL } from "@/constant";
 import Cookies from "js-cookie";
 
 class FieldApi{
-    private static token = Cookies.get("tf-token");
-    private static axios = axios.create({
+    private static readonly token = Cookies.get("tf-token") ?? "";
+    private static readonly axios = axios.create({
         baseURL: import.meta.env.VITE_BE_URL || API_URL,
         headers: {
             "Content-Type": "application/json",
