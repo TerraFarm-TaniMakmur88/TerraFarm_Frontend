@@ -6,8 +6,11 @@ import { MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { UserApi, FieldApi } from '@/api';
 import useAuth from "@/contexts/AuthContext";
-import { CropResponse } from "@/types";
+import { CropResponse, CropData } from "@/types";
 import { getUserIdFromToken } from "@/utils/jwt-util";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
     const { token, logout } = useAuth();
@@ -16,6 +19,77 @@ function Profile() {
         email: 'email@gmail.com',
         location: 'Coblong, Bandung',
     });
+
+    const [newField, setNewField] = useState<CropData>({
+        cropName: '',
+        area: 0,
+        soilType: '',
+        plantDate: ''
+    });
+    
+    const [errors, setErrors] = useState({
+        cropName: '',
+        area: '',
+        soilType: '',
+        plantDate: '',
+        location: ''
+    });
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const navigate = useNavigate();
+
+    // Validate field input
+    const validateField = () => {
+        const newErrors = { cropName: '', area: '', soilType: '', plantDate: '', location: '' };
+        let isValid = true;
+
+        if (!newField.cropName.trim()) {
+            newErrors.cropName = "Crop type is required.";
+            isValid = false;
+        }
+
+        if (newField.area <= 0) {
+            newErrors.area = "Area must be greater than 0.";
+            isValid = false;
+        }
+
+        if (!newField.soilType.trim()) {
+            newErrors.soilType = "Soil type is required.";
+            isValid = false;
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        if (!newField.plantDate || newField.plantDate < today) {
+            newErrors.plantDate = "Planting date must be today or later.";
+            isValid = false;
+        }
+
+        if (!location.trim() && !isDialogOpen) {
+            newErrors.location = "Location is required.";
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    // Handle adding a new field
+    const handleAddField = () => {
+        if (validateField()) {
+            setNewField({ cropName: '', area: 0, soilType: '', plantDate: '' });
+            setErrors({ cropName: '', area: '', soilType: '', plantDate: '', location: '' });  // Clear errors after adding
+            setIsDialogOpen(false);
+            navigate("/profile");
+        }
+    };
+
+    // Input change handler for field data
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof CropData) => {
+        const value = field === 'area' ? Number(e.target.value) : e.target.value;
+        setNewField({
+            ...newField,
+            [field]: value
+        });
+    };
 
     const [fields, setFields] = useState<CropResponse[]>([]);
     const handleLogout = () => {
@@ -99,7 +173,66 @@ function Profile() {
 
             <div className='flex flex-row w-full mt-14 mb-4 items-center'>
                 <p className='grow font-figtree font-semibold text-xl text-black'>My Field</p>
-                <Button className='bg-primary-default text-white rounded-lg font-figtree font-medium'>+ Add</Button>
+                {/* Add button */}
+                <div className="flex justify-end">
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button className="bg-primary-default hover:bg-primary-dark text-white px-6 text-lg py-2 rounded-full">+ Add</Button>
+                        </DialogTrigger>
+
+                        {/* Popup Dialog */}
+                        <DialogContent className='px-6 rounded-3xl'>
+                            <DialogTitle className='text-2xl font-bold text-primary-default'>Add Crop</DialogTitle>
+                            <div className="space-y-4">
+                                <div className='space-y-1.5'>
+                                    <div className='text-sm font-semibold'>Crop Type</div>
+                                    <Input
+                                        placeholder="Enter crop type..."
+                                        value={newField.cropName}
+                                        onChange={(e) => handleInputChange(e, 'cropName')}
+                                        className={`w-full rounded-xl h-12 ${errors.cropName ? 'border-red-500' : ''}`}
+                                    />
+                                    {errors.cropName && <p className="text-red-500 text-sm">{errors.cropName}</p>}
+                                </div>
+                                <div className='space-y-1.5'>
+                                    <div className='text-sm font-semibold'>Area</div>
+                                    <Input
+                                        placeholder="Enter area in ha"
+                                        value={newField.area || ''}
+                                        onChange={(e) => handleInputChange(e, 'area')}
+                                        className={`w-full rounded-xl h-12 ${errors.area ? 'border-red-500' : ''}`}
+                                        type="number"
+                                    />
+                                    {errors.area && <p className="text-red-500 text-sm">{errors.area}</p>}
+                                </div>
+                                <div className='space-y-1.5'>
+                                    <div className='text-sm font-semibold'>Soil Type</div>
+                                    <Input
+                                        placeholder="Enter soil type"
+                                        value={newField.soilType}
+                                        onChange={(e) => handleInputChange(e, 'soilType')}
+                                        className={`w-full rounded-xl h-12 ${errors.soilType ? 'border-red-500' : ''}`}
+                                    />
+                                    {errors.soilType && <p className="text-red-500 text-sm">{errors.soilType}</p>}
+                                </div>
+                                <div className='space-y-1.5'>
+                                    <div className='text-sm font-semibold'>Planting date</div>
+                                    <Input
+                                        placeholder="Enter planting date"
+                                        value={newField.plantDate}
+                                        onChange={(e) => handleInputChange(e, 'plantDate')}
+                                        className={`w-full rounded-xl h-12 ${errors.plantDate ? 'border-red-500' : ''}`}
+                                        type="date"
+                                    />
+                                    {errors.plantDate && <p className="text-red-500 text-sm">{errors.plantDate}</p>}
+                                </div>
+                                <Button className="w-full py-2 mt-8 text-lg bg-primary-default text-white rounded-full hover:bg-primary-dark transition-transform duration-300 transform hover:scale-105" onClick={handleAddField}>
+                                    Save
+                                </Button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
             </div>
 
             <div className='flex flex-col gap-3 w-full mb-20 h-80 overflow-y-auto'>
