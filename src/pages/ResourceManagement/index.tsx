@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigg
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import logoSquare from '@/assets/logos/logo_colored.svg'
+import { CalculatorApi } from '@/api';
 
 interface Field {
     cropType: string;
@@ -48,15 +49,21 @@ function ResourceManagement() {
     const [profit, setProfit] = useState(0);
     const [profitMargin, setProfitMargin] = useState(0);
 
-    const calculateProfit = () => {
+    const calculateProfit = async () => {
         const revenue = parseFloat(totalRevenue);
         const cost = parseFloat(costOfGoodsSold);
-        
+
         if (!isNaN(revenue) && !isNaN(cost)) {
-            const operatingProfit = revenue - cost;
-            const operatingProfitMarginRatio = operatingProfit / revenue;
-            setProfit(operatingProfit);
-            setProfitMargin(operatingProfitMarginRatio * 100);
+            try {
+                // Call the API to calculate profit
+                const { profit } = await FieldApi.calculateProfit(revenue, cost);
+
+                const operatingProfitMarginRatio = profit / revenue;
+                setProfit(profit);
+                setProfitMargin(operatingProfitMarginRatio * 100);
+            } catch (error) {
+                console.error("Error calculating profit:", error);
+            }
         }
     };
 
