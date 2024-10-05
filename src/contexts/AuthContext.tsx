@@ -1,16 +1,15 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState , useEffect } from "react";
 import Cookies from "js-cookie";
-// import { verifyToken } from "@/utils/util";
-// import { AuthApi, UserApi } from "@/api";
-// import { LoginRequest, LoginResponse , SelfResponse } from "@/types";
-// import { toast } from "react-toastify";
+import { UserApi, AuthApi } from "@/api";
+import { LoginRequest, LoginResponse, SelfResponse } from "@/types";
+import { toast } from "react-toastify";
 
 type AuthContext = {
     isAuthenticated: boolean;
     token: string | null;
-    // login: (payload: LoginRequest) => Promise<void>;
+    login: (payload: LoginRequest) => Promise<void>;
     logout: () => void;
-    // username: string;
+    username: string;
     update: boolean;
     setUpdate: (prop: boolean) => void;
 };
@@ -18,36 +17,34 @@ type AuthContext = {
 const AuthContext = createContext<AuthContext>({
     isAuthenticated: false,
     token: null,
-    // login: async () => {},
+    login: async () => {},
     logout: () => {},
-    // username: "",
+    username: "",
     update: false,
     setUpdate: () => {}
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    // const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [token, setToken] = useState<string | null>(null);
-    // const [username, setUsername] = useState("user");
+    const [username, setUsername] = useState("user");
     const [update, setUpdate] = useState(false);
 
-    /* useEffect(() => {
+    useEffect(() => {
         const fetchUser = async () => {
             const token = Cookies.get("tf-token");
 
             if (token) {
                 try {
-                    const user: SelfResponse = await UserApi.getSelf(token);
+                    const user: SelfResponse = await UserApi.getSelf();
 
                     if (user) {
                         setIsAuthenticated(true);
-                        setUsername(user.user.name || "user");
+                        setUsername(user.name || "user");
                         setToken(token);
                     }
                 } catch (error) {
-                    // console.log(user);
-                    // Cookies.remove("j-token");
                     console.error(error);
                 }
             }
@@ -56,24 +53,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
 
         fetchUser();
-    }, [token]); */
+    }, [token]);
 
-    /* const login = async (payload: LoginRequest) => {
+    const login = async (payload: LoginRequest) => {
+        console.log("Login");
         try {
             const auth: LoginResponse = await AuthApi.login(payload);
 
-            if (auth.success === true) {
+            if (auth.token) {
                 setIsAuthenticated(true);
-                Cookies.set("tf-token", auth.token as string);
-                setToken(auth.token as string);
+                Cookies.set("tf-token", auth.token);
+                setToken(auth.token);
                 toast.success("Login successful");
                 window.location.href = "/";
+            } else {
+                throw new Error("No token received");
             }
         } catch (error) {
             console.error("Login error:", error);
             throw error;
         }
-    }; */
+    };
 
     const logout = () => {
         setIsAuthenticated(false);
@@ -81,11 +81,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(null);
     };
 
-    // if (isLoading) return null;
+    if (isLoading) return null;
 
     return (
         <AuthContext.Provider
-            value={{ isAuthenticated, token, /* login, */ logout, update, setUpdate/* , username */ }}
+            value={{ isAuthenticated, token, login, logout, update, setUpdate, username }}
         >
             {children}
         </AuthContext.Provider>

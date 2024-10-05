@@ -1,4 +1,4 @@
-import React/* , { useEffect } */ from "react";
+import React , { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logos/logo_square_default.svg";
@@ -8,7 +8,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import useAuth from "@/contexts/AuthContext";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LoginRequest } from "@/types";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
@@ -23,31 +23,15 @@ const formSchema = z.object({
 })
 
 const Login: React.FC = () => {
-    const { /* isAuthenticated, login, role, isVerified, */ update, setUpdate } = useAuth();
-    // const navigate = useNavigate();
+    const { isAuthenticated, login,  update, setUpdate } = useAuth();
+    const navigate = useNavigate();
     
-    /* useEffect(() => {
+    useEffect(() => {
         if (isAuthenticated) {
+            console.log("User is authenticated, navigating to dashboard");
             navigate("/dashboard");
         }
-
-        // role
-        if (role === "customer") {
-            if (isVerified == "pending") {
-                navigate("/setup-cust");
-            } else if (isVerified == "in-progress") {
-                navigate("/setup-cust-skill");
-            }
-        } else if (role === "ngo") {
-            if (isVerified == "pending") {
-                navigate("/setup-ngo");
-            }
-        } else if (role === "business") {
-            if (isVerified == "pending") {
-                navigate("/setup-business");
-            }
-        }
-    }, [isAuthenticated, isVerified, role, navigate]); */
+    }, [isAuthenticated, navigate]);
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -55,26 +39,29 @@ const Login: React.FC = () => {
             email: "",
             password: "",
         },
-    })
+    });
         
-    function onSubmit(data: z.infer<typeof formSchema>) {
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+        console.log("Submitting login...");
         try {
             const payload: LoginRequest = {
                 email: data.email,
                 password: data.password
             };
-            // setUpdate(true);
-
-            // login(payload);
-            console.log(payload);
+            console.log("Login payload:", payload);
+            setUpdate(true);
+            
+            await login(payload);
+            console.log("After login");
         } catch (error) {
             console.error("Submit error:", error);
             const err = error as AxiosError;
             toast.error((err.response?.data as { message: string })?.message || 'Server is unreachable. Please try again later.');
         } finally {
-            // setUpdate(false);
+            setUpdate(false);
         }
     }
+    
     
     return (
         <main className="flex flex-row w-[100vw] min-h-screen justify-center items-center bg-gradient-to-tl from-primary-default/[0.4] to-white">

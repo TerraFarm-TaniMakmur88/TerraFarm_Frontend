@@ -24,3 +24,26 @@ export interface SignupRequest {
     email: string;
     password: string;
 }
+
+// Signup Response
+export interface SignupResponse {
+    userId: number;
+}
+
+// Self Response
+export interface SelfResponse {
+    email: string;
+    name: string;
+    location: string;
+}
+
+// Crop Response
+export interface CropResponse {
+    id: number;
+    userId: number;
+    area: number;
+    soilType: string;
+    plantDate: string;
+    status: string;
+    harvest_pred: string | null;
+}

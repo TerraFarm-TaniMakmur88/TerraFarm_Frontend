@@ -1,4 +1,4 @@
-import React/* , { useEffect } */ from "react";
+import React , { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logos/logo_square_default.svg";
@@ -8,10 +8,11 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import useAuth from "@/contexts/AuthContext";
-// import { useNavigate } from "react-router-dom";
-import { SignupRequest } from "@/types";
+import { useNavigate } from "react-router-dom";
+import { SignupRequest, SignupResponse } from "@/types";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import { AuthApi } from "@/api";
  
 const formSchema = z.object({
     name: z.string({
@@ -26,31 +27,14 @@ const formSchema = z.object({
 })
 
 const Signup: React.FC = () => {
-    const { /* isAuthenticated, login, role, isVerified, */ update, setUpdate } = useAuth();
-    // const navigate = useNavigate();
+    const { isAuthenticated, update, setUpdate } = useAuth();
+    const navigate = useNavigate();
     
-    /* useEffect(() => {
+    useEffect(() => {
         if (isAuthenticated) {
-            navigate("/dashboard");
+            navigate("/");
         }
-
-        // role
-        if (role === "customer") {
-            if (isVerified == "pending") {
-                navigate("/setup-cust");
-            } else if (isVerified == "in-progress") {
-                navigate("/setup-cust-skill");
-            }
-        } else if (role === "ngo") {
-            if (isVerified == "pending") {
-                navigate("/setup-ngo");
-            }
-        } else if (role === "business") {
-            if (isVerified == "pending") {
-                navigate("/setup-business");
-            }
-        }
-    }, [isAuthenticated, isVerified, role, navigate]); */
+    }, [isAuthenticated, navigate]);
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -61,23 +45,31 @@ const Signup: React.FC = () => {
         },
     })
         
-    function onSubmit(data: z.infer<typeof formSchema>) {
+    async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
             const payload: SignupRequest = {
                 name: data.name,
                 email: data.email,
                 password: data.password
             };
-            // setUpdate(true);
+            setUpdate(true);
 
-            // login(payload);
-            console.log(payload);
+            // Submit the response
+            const submitResponse: SignupResponse = await AuthApi.register(payload);
+            console.log("Signup response:", submitResponse);
+            if (submitResponse.userId) {
+                toast.success("Signup successful.");
+                if (submitResponse.userId) {
+                    // Go to the KYC page with ID userId
+                    navigate(`/kyc/${submitResponse.userId}`);
+                } 
+            }
         } catch (error) {
             console.error("Submit error:", error);
             const err = error as AxiosError;
             toast.error((err.response?.data as { message: string })?.message || 'Server is unreachable. Please try again later.');
         } finally {
-            // setUpdate(false);
+            setUpdate(false);
         }
     }
     

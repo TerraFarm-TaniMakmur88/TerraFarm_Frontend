@@ -1,10 +1,38 @@
+import { useEffect, useState } from 'react';
 import avatar from '@/assets/images/avatar.png'
 import loc from '@/assets/icons/loc.svg'
 import { Button } from '@/components/ui/button'
 import { MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { UserApi } from '@/api';
+import useAuth from "@/contexts/AuthContext";
 
 function Profile() {
+    const { token, logout } = useAuth();
+    const [userData, setUserData] = useState({
+        name: 'Farmer Name',
+        email: 'email@gmail.com',
+        location: 'Coblong, Bandung',
+    });
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (token) {
+                try {
+                    const user = await UserApi.getSelf(token);
+                    setUserData({
+                        name: user.name || 'Farmer Name',
+                        email: user.email || 'email@gmail.com',
+                        location: user.location || 'Coblong, Bandung',
+                    });
+                } catch (error) {
+                    console.error('Error fetching profile:', error);
+                }
+            }
+        };
+        fetchProfile();
+    }, [token]);
+
     return (
         <div className="w-screen h-screen bg-bg-custom-gradient flex flex-col px-10 py-12 items-center">
             <div className='flex w-full justify-end mb-2'>
@@ -15,7 +43,7 @@ function Profile() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="absolute right-0 w-fit bg-white px-5 py-2 rounded-lg ring-0 focus:ring-0 drop-shadow-md">
-                        <DropdownMenuLabel>Logout</DropdownMenuLabel>
+                        <DropdownMenuLabel onClick={logout}>Logout</DropdownMenuLabel>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
@@ -34,11 +62,11 @@ function Profile() {
                 />
             </div>
             <div className='flex flex-col items-center mt-4 gap-2'>
-                <p className='font-figtree font-semibold text-3xl text-black'>Farmer Name</p>
-                <p className='font-figtree font-normal text-base text-black'>email@gmail.com</p>
+                <p className='font-figtree font-semibold text-3xl text-black'>{userData.name}</p>
+                <p className='font-figtree font-normal text-base text-black'>{userData.email}</p>
                 <div className='flex flex-row gap-1'>
                     <img src={loc} className='w-3' />
-                    <p className='font-figtree font-bold text-md text-primary-default'>Coblong, Bandung</p>
+                    <p className='font-figtree font-bold text-md text-primary-default'>{userData.location}</p>
                 </div>
             </div>
 
