@@ -1,5 +1,5 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
-import { Home } from "@/pages";
+import { Home, Login } from "@/pages";
 import { Navbar, Footer } from "@/components";
 // import { AuthProvider } from "@/contexts/AuthContext";
 
@@ -29,12 +29,12 @@ const routes: RouteObject[] = [
         ],
     },
     {
-        path: "/auth",
+        path: "/",
         element: <AuthLayout />,
         children: [
             {
-                path: "/auth",
-                element: <Home />,  // Change this to the correct auth-related component
+                path: "/login",
+                element: <Login />,
             }
         ],
     },
