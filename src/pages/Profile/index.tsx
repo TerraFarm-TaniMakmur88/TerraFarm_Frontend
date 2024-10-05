@@ -51,6 +51,15 @@ function Profile() {
         fetchProfile();
     }, [token]);
 
+    const handleStatusChange = async (id: number, status: string) => {
+        try {
+            await FieldApi.updateFieldStatus(id, status);
+            setFields(fields.map(field => field.id === id ? { ...field, status } : field));
+        } catch (error) {
+            console.error('Error updating field status:', error);
+        }
+    };
+
     return (
         <div className="w-screen bg-bg-custom-gradient flex flex-col px-10 py-12 items-center">
             <div className='flex w-full justify-end mb-2'>
@@ -100,9 +109,22 @@ function Profile() {
                             <div className='flex flex-row w-full items-center'>
                                 <div className='grow flex flex-row gap-4 items-center'>
                                     <p className='font-figtree font-bold text-xl text-primary-default'>{field.cropName}</p>
-                                    <div className={`bg-primary-default h-fit py-0.5 px-1.5 rounded-md font-figtree font-medium text-sm text-white`}>
-                                        {field.status}
-                                    </div>
+                                    {
+                                        field.status === "fail" ? (
+                                            <>
+                                                <div className={`bg-secondary-default h-fit py-0.5 px-1.5 rounded-md font-figtree font-medium text-sm text-white`}>
+                                                    {field.status}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className={`bg-primary-default h-fit py-0.5 px-1.5 rounded-md font-figtree font-medium text-sm text-white`}>
+                                                    {field.status}
+                                                </div>
+                                            </>
+                                        )
+                                    }
+                                    
                                 </div>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -111,9 +133,14 @@ function Profile() {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="absolute right-0 w-fit bg-white px-5 py-2 rounded-lg ring-0 focus:ring-0 drop-shadow-md">
-                                        <DropdownMenuLabel className="whitespace-nowrap m-1">Replant</DropdownMenuLabel>
-                                        <DropdownMenuLabel className="whitespace-nowrap m-1">Harvest</DropdownMenuLabel>
-                                        <DropdownMenuLabel className="whitespace-nowrap m-1">Crop failure</DropdownMenuLabel>
+                                        {field.status === "planting" ? (
+                                            <>
+                                                <DropdownMenuLabel className="whitespace-nowrap m-1" onClick={() => handleStatusChange(field.id, "harvest")}>Harvest</DropdownMenuLabel>
+                                                <DropdownMenuLabel className="whitespace-nowrap m-1" onClick={() => handleStatusChange(field.id, "fail")}>Crop failure</DropdownMenuLabel>
+                                            </>
+                                        ) : (
+                                            <DropdownMenuLabel className="whitespace-nowrap m-1" onClick={() => handleStatusChange(field.id, "planting")}>Replant</DropdownMenuLabel>
+                                        )}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </div>
