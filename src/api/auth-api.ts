@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from "@/types";
+import { KYCRequest, KYCResponse, LoginRequest, LoginResponse, SignupRequest, SignupResponse } from "@/types";
 import { API_URL } from "@/constant";
 
 class AuthApi {
@@ -22,6 +22,15 @@ class AuthApi {
     static async register(payload: SignupRequest): Promise<SignupResponse> {
         try {
             const response = await this.axios.post<SignupResponse>("/user", payload);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async kyc(payload: KYCRequest): Promise<KYCResponse> {
+        try {
+            const response = await this.axios.post<KYCResponse>("/field", payload);
             return response.data;
         } catch (error) {
             throw error;
