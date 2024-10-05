@@ -13,6 +13,7 @@ import { getUsernameFromToken } from "@/utils/jwt-util";
 import { toast } from "react-toastify";
 import { UserApi } from "@/api";
 import { WeatherData, WeatherResponse } from "@/types";
+import loadingGif from "@/assets/images/loading.gif";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
@@ -109,11 +110,15 @@ const Home: React.FC = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>; // Show a loading state until the data is fetched
+        return (
+            <div className="w-full h-screen flex justify-center items-center">
+                <img id="loading-gif" src={loadingGif} className="h-32" />
+            </div>
+        );
     }
 
     return (
-        <div className="w-screen h-screen bg-white flex flex-col px-7 py-8 items-center">
+        <div className="w-screen h-screen bg-white flex flex-col px-7 py-8 items-center transform opacity-1 translate-y-2 transition-all duration-700 ease-in-out">
             <div className="flex flex-row w-full mb-7 justify-end">
                 <img src={logoSquare} className="h-10" />
             </div>
