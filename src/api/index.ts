@@ -1,3 +1,4 @@
 import UserApi from "./user-api";
+import AuthApi from "./auth-api";
 
-export { UserApi };
+export { AuthApi, UserApi };
