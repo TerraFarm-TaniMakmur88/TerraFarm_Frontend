@@ -24,3 +24,10 @@ export interface SignupRequest {
     email: string;
     password: string;
 }
+
+// Self Response
+export interface SelfResponse {
+    email: string;
+    name: string;
+    location: string;
+}

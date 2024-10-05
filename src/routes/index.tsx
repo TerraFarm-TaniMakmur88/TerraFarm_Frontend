@@ -3,21 +3,27 @@ import { Home, KYC, Login, Signup } from "@/pages";
 import { Navbar } from "@/components";
 import Landing from "@/pages/landing";
 import Profile from "@/pages/Profile";
-// import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const MainLayout = () => {
     return (
-        <div className="flex flex-col min-h-screen">
-            <div className="flex-grow">
-                <Outlet />
+        <AuthProvider>
+            <div className="flex flex-col min-h-screen">
+                <div className="flex-grow">
+                    <Outlet />
+                </div>
+                <Navbar />
             </div>
-            <Navbar />
-        </div>
+        </AuthProvider>
     );
 };
 
 const AuthLayout = () => {
-    return <Outlet />;
+    return (
+        <AuthProvider>
+            <Outlet />
+        </AuthProvider>
+    );
 };
 
 const routes: RouteObject[] = [
