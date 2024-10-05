@@ -55,25 +55,25 @@ function MobileView() {
                 <p className="font-figtree text-2xl font-bold text-white text-start w-full mb-4 drop-shadow-lg">What TerraFarm can do</p>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="relative drop-shadow-lg">
-                        <img src={landingFeat1} className="w-40" />
+                        <img src={landingFeat1} alt="stat1" className="w-40" />
                         <p className="absolute inset-0 p-2 content-end font-figtree font-semibold text-white text-base text-start">
                             Monitor real-time field condition
                         </p>
                     </div>
                     <div className="relative drop-shadow-lg">
-                        <img src={landingFeat2} className="w-40" />
+                        <img src={landingFeat2} alt="stat2" className="w-40" />
                         <p className="absolute inset-0 p-2 content-end font-figtree font-semibold text-white text-base text-start">
                             Get informed for potential damage
                         </p>
                     </div>
                     <div className="relative drop-shadow-lg">
-                        <img src={landingFeat3} className="w-40" />
+                        <img src={landingFeat3} alt="stat3" className="w-40" />
                         <p className="absolute inset-0 p-2 content-end font-figtree font-semibold text-white text-base text-start">
                             AI-driven crop health assessment
                         </p>
                     </div>
                     <div className="relative drop-shadow-lg">
-                        <img src={landingFeat4} className="w-40" />
+                        <img src={landingFeat4} alt="stat4" className="w-40" />
                         <p className="absolute inset-0 p-2 content-end font-figtree font-semibold text-white text-base text-start">
                             Smart resource management system
                         </p>
