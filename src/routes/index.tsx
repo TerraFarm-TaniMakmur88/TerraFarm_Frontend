@@ -1,16 +1,17 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
 import { Home, Login, Signup } from "@/pages";
-import { Navbar, Footer } from "@/components";
+import { Navbar } from "@/components";
 import Landing from "@/pages/landing";
 // import { AuthProvider } from "@/contexts/AuthContext";
 
 const MainLayout = () => {
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
+            <div className="flex-grow">
+                <Outlet />
+            </div>
             <Navbar />
-            <Outlet />
-            <Footer />
-        </>
+        </div>
     );
 };
 
