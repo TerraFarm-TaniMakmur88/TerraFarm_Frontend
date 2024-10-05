@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
-    const [active, setActive] = useState<string>('dashboard');
+    const [active, setActive] = useState<string>('');
 
     const handleTabProfile = () => {
         setActive('profile');
@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
     return (
         <div className="flex flex-row gap-14 items-center justify-around bg-white pb-5 pt-6 px-8 sticky bottom-0 z-50 rounded-t-3xl shadow-[0px_6px_15px_3px_rgba(0,0,0,0.25)]">
             <div 
-                className={`flex flex-col items-center cursor-pointer ${active === 'assistant' ? 'text-primary-default' : 'text-black'}`} 
+                className={`flex flex-col bg-red items-center cursor-pointer ${active === 'assistant' ? 'text-primary-default' : 'text-black'}`} 
                 onClick={handleTabAssistant}
             >
                 <img 
@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
                 <p className="text-sm mt-1">Assistant</p>
             </div>
             <div 
-                className={`flex flex-col items-center cursor-pointer ${active === 'dashboard' ? 'text-primary-default' : 'text-black'}`} 
+                className={`flex flex-col bg-red items-center cursor-pointer ${active === 'dashboard' ? 'text-primary-default' : 'text-black'}`} 
                 onClick={handleTabDashboard}
             >
                 <img 
