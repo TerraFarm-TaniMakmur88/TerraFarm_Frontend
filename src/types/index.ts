@@ -42,6 +42,7 @@ export interface CropResponse {
     id: number;
     userId: number;
     area: number;
+    cropName: string;
     soilType: string;
     plantDate: string;
     status: string;

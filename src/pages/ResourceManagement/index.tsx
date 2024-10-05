@@ -1,9 +1,10 @@
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import cropIcon from "@/assets/images/crop_type.png"
-import { HelpCircle, InfoIcon, MoreVertical } from "lucide-react";
+import { InfoIcon, MoreVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import logoSquare from '@/assets/logos/logo_colored.svg'
 
 interface Field {
     cropType: string;
@@ -61,13 +62,18 @@ function ResourceManagement() {
 
     return (
         <div className="w-screen bg-resource-bg-custom-gradient flex flex-col px-10 py-12 items-start">
+            <div className="flex flex-row w-full mb-3 justify-end">
+                <img src={logoSquare} className="h-10" />
+            </div>
             <p className="font-figtree font-bold text-3xl text-black">Resource management tool</p>
-            <p className="mt-6 mb-3 font-figtree font-semibold text-xl text-black">Best crops to plant on your field</p>
+            <p className="mt-5 px-4 py-3 bg-[#3F7242] rounded-lg drop-shadow-lg font-figtree font-medium text-md text-white">Based on the weather and water availability in your location, your current crops may not be ideal.</p>
+            <p className="mt-3.5 mb-2 font-figtree font-semibold text-xl text-black">Here are some recommended crops for your field:</p>
+            {/* <p className="mb-3 font-figtree font-semibold text-xl text-black">Best crops to plant on your field</p> */}
             <Carousel className="w-full">
                 <CarouselContent className="h-16 p-1 flex gap-0">
                     {idealCrops.map((crop, index) => (
                         <CarouselItem key={index} className="basis-2/5 flex-shrink-0 w-40 drop-shadow-xs">
-                            <div className="w-full flex flex-row items-center gap-2 py-3 px-3 drop-shadow-lg bg-[#F2F7F2] rounded-lg">
+                            <div className="w-full flex flex-row items-center gap-2 py-3 px-4 drop-shadow-lg bg-[#F2F7F2] rounded-lg">
                                 <img src={cropIcon} className="h-6" alt="Crop Icon" />
                                 <p className="font-figtree font-semibold text-black text-base">
                                     {crop}
@@ -84,7 +90,7 @@ function ResourceManagement() {
                 </p>
             </div>
 
-            <p className="mt-7 mb-3 font-figtree font-semibold text-xl text-black">Time to harvest!</p>
+            <p className="mt-10 mb-3 font-figtree font-semibold text-xl text-black">Time to harvest!</p>
             <div className="w-full grid grid-cols-1 gap-4 h-44 overflow-y-auto">
                 {myFields.map((field, index) => (
                     <div key={index} className='flex flex-col gap-1 px-5 py-3 w-full rounded-xl bg-[#F2F7F2] drop-shadow-md'>
@@ -135,7 +141,7 @@ function ResourceManagement() {
             </div>
 
             
-            <p className="mt-7 mb-3 font-figtree font-semibold text-xl text-black">Crop profit calculator</p>
+            <p className="mt-10 mb-3 font-figtree font-semibold text-xl text-black">Crop profit calculator</p>
             <div className="w-full flex flex-col items-start gap-3 bg-[#F2F7F2] py-5 px-5 rounded-lg drop-shadow-md">
                 {/* Total Revenue Input */}
                 <label className="font-figtree text-base text-black">Total Revenue:</label>

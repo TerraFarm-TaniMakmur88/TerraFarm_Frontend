@@ -14,8 +14,9 @@ class UserApi {
     });
 
     static async getSelf(): Promise<SelfResponse> {
+        // eslint-disable-next-line no-useless-catch
         try {
-            const response = await this.axios.post<SelfResponse>("/user");
+            const response = await this.axios.get<SelfResponse>("/user");
             return response.data;
         } catch (error) {
             throw error;
