@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CropResponse } from "@/types";
+import { CropResponse, CropData } from "@/types";
 import { API_URL } from "@/constant";
 import Cookies from "js-cookie";
 
@@ -38,6 +38,15 @@ class FieldApi{
         // eslint-disable-next-line no-useless-catch
         try {
             await this.axios.put(`/field/plant_date`, { id, plantDate });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async createFields(userId: number, location: string, fields: CropData[]): Promise<void> {
+        // eslint-disable-next-line no-useless-catch
+        try {
+            await this.axios.post(`/field`, { userId, location, fields });
         } catch (error) {
             throw error;
         }

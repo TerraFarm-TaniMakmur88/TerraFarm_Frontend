@@ -34,6 +34,7 @@ function Profile() {
         plantDate: '',
         location: ''
     });
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -58,13 +59,8 @@ function Profile() {
         }
 
         const today = new Date().toISOString().split('T')[0];
-        if (!newField.plantDate || newField.plantDate < today) {
+        if (!newField.plantDate || newField.plantDate > today) {
             newErrors.plantDate = "Planting date must be today or later.";
-            isValid = false;
-        }
-
-        if (!location.trim() && !isDialogOpen) {
-            newErrors.location = "Location is required.";
             isValid = false;
         }
 
@@ -73,14 +69,41 @@ function Profile() {
     };
 
     // Handle adding a new field
-    const handleAddField = () => {
+    const handleAddField = async () => {
         if (validateField()) {
-            setNewField({ cropName: '', area: 0, soilType: '', plantDate: '' });
-            setErrors({ cropName: '', area: '', soilType: '', plantDate: '', location: '' });  // Clear errors after adding
-            setIsDialogOpen(false);
-            navigate("/profile");
+            const userId = getUserIdFromToken(token as string);
+            if (!userId) {
+                console.error("Failed to decode userId from token.");
+                return;
+            }
+    
+            const location = userData.location;
+            const fieldsToAdd = [
+                {
+                    cropName: newField.cropName,
+                    area: newField.area,
+                    soilType: newField.soilType,
+                    status: 'planting',
+                    plantDate: newField.plantDate,
+                },
+            ];
+    
+            try {
+                await FieldApi.createFields(userId, location, fieldsToAdd);
+                // Reset the newField state and errors
+                setNewField({ cropName: '', area: 0, soilType: '', plantDate: '' });
+                setErrors({ cropName: '', area: '', soilType: '', plantDate: '', location: '' });
+                setIsDialogOpen(false);
+    
+                // Fetch updated fields after adding a new field
+                const updatedFieldData = await FieldApi.getFieldById(userId);
+                setFields(updatedFieldData); // Update the state with the new list of fields
+            } catch (error) {
+                console.error('Error creating fields:', error);
+            }
         }
     };
+    
 
     // Input change handler for field data
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof CropData) => {
@@ -187,7 +210,7 @@ function Profile() {
                         </DialogTrigger>
 
                         {/* Popup Dialog */}
-                        <DialogContent className='px-6 rounded-3xl'>
+                        <DialogContent className='w-[90%] px-6 rounded-3xl'>
                             <DialogTitle className='text-2xl font-bold text-primary-default'>Add Crop</DialogTitle>
                             <div className="space-y-4">
                                 <div className='space-y-1.5'>
