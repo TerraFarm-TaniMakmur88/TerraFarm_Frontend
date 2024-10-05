@@ -5,6 +5,7 @@ import Landing from "@/pages/landing";
 import Profile from "@/pages/Profile";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ResourceManagement from "@/pages/ResourceManagement";
+import VoiceAssistant from "@/pages/VoiceAssistant";
 
 const MainLayout = () => {
     return (
@@ -43,6 +44,10 @@ const routes: RouteObject[] = [
             {
                 path: "/resource",
                 element: <ResourceManagement />,
+            },
+            {
+                path: "/assistant",
+                element: <VoiceAssistant />,
             }
         ],
     },

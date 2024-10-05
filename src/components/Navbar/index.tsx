@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
     };
     const handleTabAssistant = () => {
         setActive('assistant');
-        navigate('/profile');
+        navigate('/assistant');
     };
 
     return (
