@@ -6,8 +6,15 @@ import landingFeat3 from "@/assets/images/landing_feat_3.png"
 import landingFeat4 from "@/assets/images/landing_feat_4.png"
 import landingFooter from "@/assets/images/landing_footer.png"
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom"
 
 function MobileView() {
+    const navigate = useNavigate();
+
+    const handleLogin = () => {
+        navigate('/login');
+    };
+
     return (
         <div className="flex flex-col w-screen overflow-x-hidden p-0 gap-0">
             <div className="relative w-screen"> 
@@ -29,7 +36,7 @@ function MobileView() {
             </div>
             <div className="flex flex-col items-center bg-landing-custom-gradient px-10 py-14 mb-20">
                 <img src={logo} className="w-50 mb-6" alt="TerraFarm Logo" />
-                <Button className="bg-white px-8 py-7 mb-32 text-secondary-default rounded-full font-figtree text-2xl font-bold drop-shadow-lg">
+                <Button onClick={handleLogin} className="bg-white px-8 py-7 mb-32 text-secondary-default rounded-full font-figtree text-2xl font-bold drop-shadow-lg">
                     Start Cultivating
                 </Button>
                 <p className="mb-32 font-figtree text-xl font-medium text-start text-white"> {/* font figtree 16 medium  */}
@@ -69,7 +76,7 @@ function MobileView() {
                     <p className="mb-1 font-figtree font-semibold text-2xl text-white">
                         Ready to cultivate smarter?
                     </p>
-                    <Button className="bg-white px-4 py-5 mb-32 text-secondary-default rounded-full font-figtree text-lg font-bold drop-shadow-lg">
+                    <Button onClick={handleLogin} className="bg-white px-4 py-5 mb-32 text-secondary-default rounded-full font-figtree text-lg font-bold drop-shadow-lg">
                         Join us
                     </Button>
                 </div>
