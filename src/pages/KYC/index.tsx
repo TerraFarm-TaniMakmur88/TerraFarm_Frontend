@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ import { AuthApi } from '@/api';
 
 const KYC = () => {
     const { id } = useParams<{ id: string }>();
-    const { update, setUpdate } = useAuth();
+    const { update, setUpdate, isAuthenticated } = useAuth();
     const [fields, setFields] = useState<CropData[]>([]);
     const [newField, setNewField] = useState<CropData>({
         cropName: '',
@@ -33,8 +33,19 @@ const KYC = () => {
     const navigate = useNavigate();
 
     const handleLanding = () => {
-        navigate("/landing");
+        navigate("/");
     };
+
+    useEffect(() => {
+        if (!id) {
+            navigate("/");
+            return;
+        }
+
+        if (isAuthenticated) {
+            navigate("/home");
+        }
+    }, [isAuthenticated, navigate]);
 
     // Validate field input
     const validateField = () => {

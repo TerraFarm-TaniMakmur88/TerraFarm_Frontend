@@ -30,26 +30,12 @@ const AuthLayout = () => {
 const routes: RouteObject[] = [
     {
         path: "/",
-        element: <MainLayout />,
+        element: <AuthLayout />,
         children: [
             {
                 path: "/",
-                element: <Home />,
+                element: <Landing />,
             },
-            {
-                path: "/profile",
-                element: <Profile />,
-            },
-            {
-                path: "/resource",
-                element: <ResourceManagement />,
-            }
-        ],
-    },
-    {
-        path: "/",
-        element: <AuthLayout />,
-        children: [
             {
                 path: "/login",
                 element: <Login />,
@@ -61,13 +47,27 @@ const routes: RouteObject[] = [
             {
                 path: "/kyc/:id",
                 element: <KYC />,
-            },
-            {
-                path: "/landing",
-                element: <Landing />,
             }
         ],
     },
+    {
+        path: "/",
+        element: <MainLayout />,
+        children: [
+            {
+                path: "/home",
+                element: <Home />,
+            },
+            {
+                path: "/profile",
+                element: <Profile />,
+            },
+            {
+                path: "/resource",
+                element: <ResourceManagement />,
+            }
+        ],
+    }
 ];
 
 const router = createBrowserRouter(routes);

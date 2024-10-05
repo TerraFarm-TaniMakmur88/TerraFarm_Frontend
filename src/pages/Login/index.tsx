@@ -28,13 +28,12 @@ const Login: React.FC = () => {
     
     useEffect(() => {
         if (isAuthenticated) {
-            console.log("User is authenticated, navigating to home");
-            navigate("/");
+            navigate("/home");
         }
     }, [isAuthenticated, navigate]);
 
     const handleLanding = () => {
-        navigate("/landing");
+        navigate("/");
     };
     
     const form = useForm<z.infer<typeof formSchema>>({

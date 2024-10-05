@@ -21,7 +21,7 @@ function Profile() {
     const handleLogout = () => {
         // Basically calling logout
         logout();
-        window.location.href = "/landing";
+        window.location.href = "/";
     };
 
     useEffect(() => {

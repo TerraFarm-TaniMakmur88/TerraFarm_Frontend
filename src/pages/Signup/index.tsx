@@ -32,12 +32,12 @@ const Signup: React.FC = () => {
     
     useEffect(() => {
         if (isAuthenticated) {
-            navigate("/");
+            navigate("/home");
         }
     }, [isAuthenticated, navigate]);
 
     const handleLanding = () => {
-        navigate("/landing");
+        navigate("/");
     };
     
     const form = useForm<z.infer<typeof formSchema>>({
