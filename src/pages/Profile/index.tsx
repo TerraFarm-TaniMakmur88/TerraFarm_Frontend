@@ -34,7 +34,7 @@ function Profile() {
                     className="w-full h-full object-cover rounded-full"
                 />
             </div>
-            <div className='flex flex-col items-center mt-8 gap-2'>
+            <div className='flex flex-col items-center mt-4 gap-2'>
                 <p className='font-figtree font-semibold text-3xl text-black'>Farmer Name</p>
                 <p className='font-figtree font-normal text-base text-black'>email@gmail.com</p>
                 <div className='flex flex-row gap-1'>
