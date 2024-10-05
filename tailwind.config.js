@@ -60,6 +60,7 @@ module.exports = {
   			},
 			primary: {
 				default: '#388E3C',
+				lighter: '#63A266',
 				darker: '#183F19',
 			},
 			secondary: {
@@ -113,6 +114,7 @@ module.exports = {
       },
 	  backgroundImage: {
         'landing-custom-gradient': 'linear-gradient(180deg, #388E3C 49.53%, #FFFFFF 100%)',
+		'bg-custom-gradient': 'linear-gradient(180deg, #63A266 0%, #FFF 41.25%)',
       },
   	},
 	fontFamily: {
