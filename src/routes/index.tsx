@@ -1,5 +1,5 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
-import { Home, Login } from "@/pages";
+import { Home, Login, Signup } from "@/pages";
 import { Navbar, Footer } from "@/components";
 import Landing from "@/pages/landing";
 // import { AuthProvider } from "@/contexts/AuthContext";
@@ -36,6 +36,10 @@ const routes: RouteObject[] = [
             {
                 path: "/login",
                 element: <Login />,
+            },
+            {
+                path: "/register",
+                element: <Signup />,
             },
             {
                 path: "/landing",
