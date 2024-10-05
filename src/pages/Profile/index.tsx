@@ -50,18 +50,33 @@ function Profile() {
 
             <div className='flex flex-col gap-3 w-full mb-20'>
                 <div className='flex flex-col gap-1 px-5 py-3 w-full rounded-xl bg-[#F2F7F2] drop-shadow-md'>
-                    <p className='font-figtree font-bold text-lg text-primary-default'>Corn</p>
-                    <div className='flex flex-row w-full'>
-                        <p className='grow font-figtree font-normal text-base text-black'>Area</p>
-                        <p className='font-figtree font-semibold text-base text-black'>4.00 ha</p>
+                    <div className='flex flex-row w-full items-center'>
+                        <div className='grow flex flex-row gap-4 items-center'>
+                            <p className='font-figtree font-bold text-xl text-primary-default'>Corn</p>
+                            {/* <div className='bg-secondary-default h-fit py-0.5 px-1.5 rounded-md font-figtree font-medium text-sm text-white'>
+                                Failure
+                            </div> */}
+                            <div className='bg-primary-default h-fit py-0.5 px-1.5 rounded-md font-figtree font-medium text-sm text-white'>
+                                Planting
+                            </div>
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button className='p-0 m-0 focus:ring-0 ring-0'>
+                                    <MoreVertical style={{ height: '16px', strokeWidth: 2 }} />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="absolute right-0 w-fit bg-white px-5 py-2 rounded-lg ring-0 focus:ring-0 drop-shadow-md">
+                                <DropdownMenuLabel className="whitespace-nowrap m-1">Replant</DropdownMenuLabel>
+                                <DropdownMenuLabel className="whitespace-nowrap m-1">Harvest</DropdownMenuLabel>
+                                <DropdownMenuLabel className="whitespace-nowrap m-1">Crop failure</DropdownMenuLabel>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                     <div className='flex flex-row w-full'>
-                        <p className='grow font-figtree font-normal text-base text-black'>Soil type</p>
-                        <p className='font-figtree font-semibold text-base text-black'>Sand</p>
+                        <p className='grow font-figtree font-normal text-base text-black'>Planting date</p>
+                        <p className='font-figtree font-semibold text-base text-black'>30/09/2024</p>
                     </div>
-                </div>
-                <div className='flex flex-col gap-1 px-5 py-3 w-full rounded-xl bg-[#F2F7F2] drop-shadow-md'>
-                    <p className='font-figtree font-bold text-lg text-primary-default'>Corn</p>
                     <div className='flex flex-row w-full'>
                         <p className='grow font-figtree font-normal text-base text-black'>Area</p>
                         <p className='font-figtree font-semibold text-base text-black'>4.00 ha</p>
@@ -72,11 +87,6 @@ function Profile() {
                     </div>
                 </div>
             </div>
-
-            {/* <Button className='flex flex-row items-center gap-1 bg-red-400'>
-                <img src={logoutIcon} className='w-3' />
-                <p className='font-figtree font-semibold text-base text-white'>Logout</p>
-            </Button> */}
         </div>
     );
 }
