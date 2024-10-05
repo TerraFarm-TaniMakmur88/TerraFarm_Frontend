@@ -33,6 +33,15 @@ class FieldApi{
             throw error;
         }
     }
+
+    static async updatePlantDate(id: number, plantDate: string): Promise<void> {
+        // eslint-disable-next-line no-useless-catch
+        try {
+            await this.axios.put(`/field/plant_date`, { id, plantDate });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default FieldApi;
