@@ -3,6 +3,7 @@ import { Home, KYC, Login, Signup } from "@/pages";
 import { Navbar } from "@/components";
 import Landing from "@/pages/landing";
 import Profile from "@/pages/Profile";
+import ResourceManagement from "@/pages/ResourceManagement";
 // import { AuthProvider } from "@/contexts/AuthContext";
 
 const MainLayout = () => {
@@ -32,6 +33,10 @@ const routes: RouteObject[] = [
             {
                 path: "/profile",
                 element: <Profile />,
+            },
+            {
+                path: "/resource",
+                element: <ResourceManagement />,
             }
         ],
     },

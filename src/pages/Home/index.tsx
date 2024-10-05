@@ -7,8 +7,15 @@ import logoSquare from '@/assets/logos/logo_colored.svg'
 import plantingIcon from '@/assets/images/planting.png'
 import resourceBg from '@/assets/images/resource_bg.png'
 import { ArrowRightCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
+    const navigate = useNavigate();
+    
+    const handleNavigateResource = () => {
+        navigate('/resource');
+    };
+    
     const actionRecommendations = [
         'Harvest your cassavas before raining in 5 days!',
         'Start replanting your rice fields today!',
@@ -65,7 +72,10 @@ const Home: React.FC = () => {
             </div>
             
             <p className="w-full mb-4 items-start font-figtree font-bold text-2xl text-black">Manage your field resources</p>
-            <div className="relative w-full mb-3 gap-3 rounded-lg drop-shadow-md items-center drop-shadow-lg">
+            <div 
+                onClick={handleNavigateResource} 
+                className="relative w-full mb-3 gap-3 rounded-lg drop-shadow-md items-center drop-shadow-lg"
+            >
                 <img src={resourceBg} className="w-full object-cover" />
                 <div className="absolute inset-0 content-center items-center flex flex-row w-full p-6 gap-3">
                     <img src={plantingIcon} className="w-16 drop-shadow-md mr-2" />
