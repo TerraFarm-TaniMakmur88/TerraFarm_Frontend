@@ -31,3 +31,14 @@ export interface SelfResponse {
     name: string;
     location: string;
 }
+
+// Crop Response
+export interface CropResponse {
+    id: number;
+    userId: number;
+    area: number;
+    soilType: string;
+    plantDate: string;
+    status: string;
+    harvest_pred: string | null;
+}
