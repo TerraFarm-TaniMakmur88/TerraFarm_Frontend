@@ -17,7 +17,7 @@ function MobileView() {
     useEffect(() => {
         if (isAuthenticated) {
             console.log("User is authenticated, navigating to home");
-            navigate("/");
+            navigate("/home");
         }
     }, [isAuthenticated, navigate]);
 

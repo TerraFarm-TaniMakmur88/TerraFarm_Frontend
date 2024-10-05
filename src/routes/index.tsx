@@ -1,6 +1,6 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
 import { Home, KYC, Login, Signup } from "@/pages";
-import { Navbar } from "@/components";
+import { Navbar, PrivateRoute } from "@/components";
 import Landing from "@/pages/landing";
 import Profile from "@/pages/Profile";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -55,16 +55,21 @@ const routes: RouteObject[] = [
         element: <MainLayout />,
         children: [
             {
-                path: "/home",
-                element: <Home />,
-            },
-            {
-                path: "/profile",
-                element: <Profile />,
-            },
-            {
-                path: "/resource",
-                element: <ResourceManagement />,
+                element: <PrivateRoute />,
+                children: [
+                    {
+                        path: "/home",
+                        element: <Home />,
+                    },
+                    {
+                        path: "/profile",
+                        element: <Profile />,
+                    },
+                    {
+                        path: "/resource",
+                        element: <ResourceManagement />,
+                    }
+                ]
             }
         ],
     }
