@@ -1,7 +1,6 @@
 import avatar from '@/assets/images/avatar.png'
 import loc from '@/assets/icons/loc.svg'
 import { Button } from '@/components/ui/button'
-import logoutIcon from '@/assets/icons/logout.svg'
 import { MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 
