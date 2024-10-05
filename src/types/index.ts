@@ -25,6 +25,11 @@ export interface SignupRequest {
     password: string;
 }
 
+// Signup Response
+export interface SignupResponse {
+    userId: number;
+}
+
 // Self Response
 export interface SelfResponse {
     email: string;
