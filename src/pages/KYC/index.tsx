@@ -1,24 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import logo from "@/assets/logos/logo_square_default.svg";
 import { Loader2 } from 'lucide-react';
 import useAuth from '@/contexts/AuthContext';
-import { useParams } from 'react-router-dom';
-
-interface Field {
-  cropName: string;
-  area: number;
-  soilType: string;
-  plantDate: string;
-}
+import { useNavigate, useParams } from 'react-router-dom';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
+import { CropData, KYCResponse } from '@/types';
+import { AuthApi } from '@/api';
 
 const KYC = () => {
     const { id } = useParams<{ id: string }>();
-    const { update, setUpdate } = useAuth();
-    const [fields, setFields] = useState<Field[]>([]);
-    const [newField, setNewField] = useState<Field>({
+    const { update, setUpdate, isAuthenticated } = useAuth();
+    const [fields, setFields] = useState<CropData[]>([]);
+    const [newField, setNewField] = useState<CropData>({
         cropName: '',
         area: 0,
         soilType: '',
@@ -33,6 +30,22 @@ const KYC = () => {
         location: ''
     });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const handleLanding = () => {
+        navigate("/");
+    };
+
+    useEffect(() => {
+        if (!id) {
+            navigate("/");
+            return;
+        }
+
+        if (isAuthenticated) {
+            navigate("/home");
+        }
+    }, [isAuthenticated, navigate]);
 
     // Validate field input
     const validateField = () => {
@@ -80,7 +93,7 @@ const KYC = () => {
     };
 
     // Input change handler for field data
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof Field) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof CropData) => {
         const value = field === 'area' ? Number(e.target.value) : e.target.value;
         setNewField({
             ...newField,
@@ -89,27 +102,40 @@ const KYC = () => {
     };
 
     // Handle form submission
-    const handleSubmit = () => {
-        if (fields.length === 0) {
-            alert("You must add at least one field.");
-            return;
+    const handleSubmit = async() => {
+        try {
+            if (fields.length === 0) {
+                alert("You must add at least one field.");
+                return;
+            }
+        
+            const data = {
+                userId: Number(id), // Convert the id string to a number
+                location,
+                fields
+            };
+            setUpdate(true);
+
+            // Submit the response
+            const submitResponse: KYCResponse = await AuthApi.kyc(data);
+            console.log("KYC response:", submitResponse);
+            if (submitResponse.location) {
+                toast.success("Data insrted successful.");
+                navigate("/login");
+            }
+        } catch (error) {
+            console.error("Submit error:", error);
+            const err = error as AxiosError;
+            toast.error((err.response?.data as { message: string })?.message || 'Server is unreachable. Please try again later.');
+        } finally {
+            setUpdate(false);
         }
-    
-        const data = {
-            userId: Number(id), // Convert the id string to a number
-            location,
-            fields
-        };
-    
-        // Simulate API call by logging the data to console
-        console.log("Prepared Data for API:", data);
-        setUpdate(true);  // To disable the button while processing
     };    
 
     return (
         <main className="flex flex-row w-[100vw] min-h-screen justify-center items-center bg-gradient-to-tr from-primary-default/[0.4] to-white">
             <div className="flex flex-col w-full gap-3 px-10 mt-32 mb-10">
-                <img src={logo} alt="logo" className="absolute top-10 left-10 z-20 h-12" />
+                <img src={logo} alt="logo" onClick={handleLanding} className="absolute top-10 left-10 z-20 h-12 transition-transform duration-300 transform hover:scale-105" />
                 <p className="font-figtree text-5xl font-semibold">Tell me about your field!</p>
                 <p className="font-figtree text-lg font-normal">Give us better information about your farm!</p>
 

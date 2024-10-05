@@ -57,17 +57,15 @@ export interface KYCRequest {
 }
 
 // CropData
-interface CropData {
+export interface CropData {
     cropName: string;
     area: number;
     soilType: string;
-    status: string;
     plantDate: string;
 }
 
 // KYC Response
 export interface KYCResponse {
-    userId: number;
     location: string;
     fields: CropData[];
 }

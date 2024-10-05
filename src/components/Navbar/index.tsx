@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
     };
     const handleTabDashboard = () => {
         setActive('dashboard');
-        navigate('/');
+        navigate('/home');
     };
     const handleTabAssistant = () => {
         setActive('assistant');

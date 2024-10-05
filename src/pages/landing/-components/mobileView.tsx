@@ -7,9 +7,19 @@ import landingFeat4 from "@/assets/images/landing_feat_4.png"
 import landingFooter from "@/assets/images/landing_footer.png"
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom"
+import useAuth from "@/contexts/AuthContext"
+import { useEffect } from "react"
 
 function MobileView() {
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+    
+    useEffect(() => {
+        if (isAuthenticated) {
+            console.log("User is authenticated, navigating to home");
+            navigate("/home");
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleLogin = () => {
         navigate('/login');
@@ -36,7 +46,7 @@ function MobileView() {
             </div>
             <div className="flex flex-col items-center bg-landing-custom-gradient px-10 py-14 mb-20">
                 <img src={logo} className="w-50 mb-6" alt="TerraFarm Logo" />
-                <Button onClick={handleLogin} className="bg-white px-8 py-7 mb-32 text-secondary-default rounded-full font-figtree text-2xl font-bold drop-shadow-lg">
+                <Button onClick={handleLogin} className="bg-white px-8 py-7 mb-32 text-secondary-default rounded-full font-figtree text-2xl font-bold drop-shadow-lg transition-transform duration-300 transform hover:scale-105">
                     Start Cultivating
                 </Button>
                 <p className="mb-32 font-figtree text-xl font-medium text-start text-white"> {/* font figtree 16 medium  */}

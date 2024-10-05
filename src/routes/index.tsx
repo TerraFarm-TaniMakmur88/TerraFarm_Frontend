@@ -1,6 +1,6 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
 import { Home, KYC, Login, Signup } from "@/pages";
-import { Navbar } from "@/components";
+import { Navbar, PrivateRoute } from "@/components";
 import Landing from "@/pages/landing";
 import Profile from "@/pages/Profile";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -31,30 +31,12 @@ const AuthLayout = () => {
 const routes: RouteObject[] = [
     {
         path: "/",
-        element: <MainLayout />,
+        element: <AuthLayout />,
         children: [
             {
                 path: "/",
-                element: <Home />,
+                element: <Landing />,
             },
-            {
-                path: "/profile",
-                element: <Profile />,
-            },
-            {
-                path: "/resource",
-                element: <ResourceManagement />,
-            },
-            {
-                path: "/assistant",
-                element: <VoiceAssistant />,
-            }
-        ],
-    },
-    {
-        path: "/",
-        element: <AuthLayout />,
-        children: [
             {
                 path: "/login",
                 element: <Login />,
@@ -66,13 +48,36 @@ const routes: RouteObject[] = [
             {
                 path: "/kyc/:id",
                 element: <KYC />,
-            },
-            {
-                path: "/landing",
-                element: <Landing />,
             }
         ],
     },
+    {
+        path: "/",
+        element: <MainLayout />,
+        children: [
+            {
+                element: <PrivateRoute />,
+                children: [
+                    {
+                        path: "/home",
+                        element: <Home />,
+                    },
+                    {
+                        path: "/profile",
+                        element: <Profile />,
+                    },
+                    {
+                        path: "/resource",
+                        element: <ResourceManagement />,
+                    },
+                    {
+                        path: "/assistant",
+                        element: <VoiceAssistant />,
+                    }
+                ]
+            }
+        ],
+    }
 ];
 
 const router = createBrowserRouter(routes);

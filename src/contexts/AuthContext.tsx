@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 Cookies.set("tf-token", auth.token);
                 setToken(auth.token);
                 toast.success("Login successful");
-                window.location.href = "/";
+                window.location.href = "/home";
             } else {
                 throw new Error("No token received");
             }
