@@ -1,7 +1,6 @@
 import { createContext, useContext, useState , useEffect } from "react";
 import Cookies from "js-cookie";
-// import { verifyToken } from "@/utils/util";
-import { UserApi } from "@/api";
+import { UserApi, AuthApi } from "@/api";
 import { LoginRequest, LoginResponse, SelfResponse } from "@/types";
 import { toast } from "react-toastify";
 
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (token) {
                 try {
-                    const user: SelfResponse = await UserApi.getSelf(token);
+                    const user: SelfResponse = await UserApi.getSelf();
 
                     if (user) {
                         setIsAuthenticated(true);
@@ -60,7 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const login = async (payload: LoginRequest) => {
         console.log("Login");
         try {
-            const auth: LoginResponse = await UserApi.login(payload);
+            const auth: LoginResponse = await AuthApi.login(payload);
 
             if (auth.token) {
                 setIsAuthenticated(true);
