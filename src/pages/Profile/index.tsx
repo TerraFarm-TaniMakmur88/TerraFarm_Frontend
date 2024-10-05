@@ -59,7 +59,7 @@ function Profile() {
         }
 
         const today = new Date().toISOString().split('T')[0];
-        if (!newField.plantDate || newField.plantDate < today) {
+        if (!newField.plantDate || newField.plantDate > today) {
             newErrors.plantDate = "Planting date must be today or later.";
             isValid = false;
         }
@@ -210,7 +210,7 @@ function Profile() {
                         </DialogTrigger>
 
                         {/* Popup Dialog */}
-                        <DialogContent className='px-6 rounded-3xl'>
+                        <DialogContent className='w-[90%] px-6 rounded-3xl'>
                             <DialogTitle className='text-2xl font-bold text-primary-default'>Add Crop</DialogTitle>
                             <div className="space-y-4">
                                 <div className='space-y-1.5'>
