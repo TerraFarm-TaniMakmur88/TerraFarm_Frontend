@@ -1,18 +1,17 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import micIcon from "@/assets/icons/mic_assist.svg";
 import waveform from "@/assets/images/waveform.gif";
 import loadingGif from "@/assets/images/loading.gif";
 import { Button } from "@/components/ui/button";
 import RagApi from "@/api/rag-api";
-// Import the RAG API
 
 function VoiceAssistant() {
     const [isRecording, setIsRecording] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
-    const mediaRecorderRef = useRef(null);
-    const audioChunksRef = useRef([]);
-    const audioPlaybackRef = useRef(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const audioChunksRef = useRef<Blob[]>([]);
+    const audioPlaybackRef = useRef<HTMLAudioElement | null>(null);
 
     const startRecording = async () => {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -20,7 +19,7 @@ function VoiceAssistant() {
         });
         mediaRecorderRef.current = new MediaRecorder(stream);
 
-        mediaRecorderRef.current.ondataavailable = (event) => {
+        mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
             audioChunksRef.current.push(event.data);
         };
 
@@ -37,11 +36,13 @@ function VoiceAssistant() {
     };
 
     const stopRecording = () => {
-        mediaRecorderRef.current.stop();
-        setIsRecording(false);
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
     };
 
-    const sendAudioToRagApi = async (audioBlob) => {
+    const sendAudioToRagApi = async (audioBlob: Blob) => {
         setLoading(true);
         try {
             const responseBlob = await RagApi.postSpeechToSpeech(audioBlob);
@@ -53,16 +54,27 @@ function VoiceAssistant() {
         }
     };
 
-    const playResponseAudio = (blob) => {
+    const playResponseAudio = (blob: Blob) => {
         const responseUrl = URL.createObjectURL(blob);
-        audioPlaybackRef.current = new Audio(responseUrl);
-        audioPlaybackRef.current.play();
-        setIsPlaying(true);
+        if (audioPlaybackRef.current) {
+            audioPlaybackRef.current.src = responseUrl;
+            audioPlaybackRef.current.play();
+            setIsPlaying(true);
 
-        audioPlaybackRef.current.addEventListener("ended", () => {
-            setIsPlaying(false);
-            URL.revokeObjectURL(responseUrl);
-        });
+            audioPlaybackRef.current.addEventListener("ended", () => {
+                setIsPlaying(false);
+                URL.revokeObjectURL(responseUrl);
+            });
+        } else {
+            audioPlaybackRef.current = new Audio(responseUrl);
+            audioPlaybackRef.current.play();
+            setIsPlaying(true);
+
+            audioPlaybackRef.current.addEventListener("ended", () => {
+                setIsPlaying(false);
+                URL.revokeObjectURL(responseUrl);
+            });
+        }
     };
 
     return (

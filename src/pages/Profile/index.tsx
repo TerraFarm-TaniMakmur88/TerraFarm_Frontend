@@ -10,7 +10,6 @@ import { CropResponse, CropData } from "@/types";
 import { getUserIdFromToken } from "@/utils/jwt-util";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from 'react-router-dom';
 
 function Profile() {
     const { token, logout } = useAuth();
@@ -36,7 +35,6 @@ function Profile() {
     });
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const navigate = useNavigate();
 
     // Validate field input
     const validateField = () => {

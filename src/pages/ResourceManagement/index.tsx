@@ -7,13 +7,6 @@ import { useState } from "react";
 import logoSquare from '@/assets/logos/logo_colored.svg'
 import { CalculatorApi } from '@/api';
 
-interface Field {
-    cropType: string;
-    area: number;
-    soilType: string;
-    plantingDate: string;
-  }
-
 function ResourceManagement() {
     const idealCrops = [
         'Rice',
@@ -56,7 +49,7 @@ function ResourceManagement() {
         if (!isNaN(revenue) && !isNaN(cost)) {
             try {
                 // Call the API to calculate profit
-                const { profit } = await FieldApi.calculateProfit(revenue, cost);
+                const { profit } = await CalculatorApi.calculateProfit(revenue, cost);
 
                 const operatingProfitMarginRatio = profit / revenue;
                 setProfit(profit);
