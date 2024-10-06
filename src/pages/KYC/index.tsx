@@ -65,6 +65,7 @@ const KYC = () => {
         if (!newField.soilType.trim()) {
             newErrors.soilType = "Soil type is required.";
             isValid = false;
+            console.log("done");
         }
 
         const today = new Date().toISOString().split('T')[0];
