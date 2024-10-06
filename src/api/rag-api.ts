@@ -10,7 +10,7 @@ class RagApi {
         responseType: 'blob',
     });
 
-    static async postSpeechToSpeech(audioBlob: any) {
+    static async postSpeechToSpeech(audioBlob: Blob) {
         try {
             const formData = new FormData();
             formData.append("audio", audioBlob, "recording.mp3");
